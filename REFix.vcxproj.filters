@@ -20,6 +20,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="REFix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
