@@ -20,7 +20,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="REFix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
