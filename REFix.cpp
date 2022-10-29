@@ -15,10 +15,10 @@ extern "C" __declspec(dllexport) bool reframework_plugin_initialize(const REFram
 
     if (player_camera_controller == nullptr) {
         api->log_warn("[REFix] Call to getCameraController failed.");
+        return false;
     }
-    else {
-        api->log_info("[REFix] Player Camera Controller found at %#.16llx", player_camera_controller);
-    }
+    
+    api->log_info("[REFix] Player Camera Controller found at %#.16llx", player_camera_controller);
 
     return true;
 }
