@@ -1,12 +1,17 @@
 #include "REFix.h"
 
 bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
+    initialized = false;
     REF::API::initialize(param);
-    param->functions->on_post_application_entry("SetupGlobalUserData", on_post_user_data);
+    param->functions->on_post_application_entry("UpdateGlobalUserData", on_post_user_data);
     return true;
 }
 
 void on_post_user_data() {
+    if (initialized)
+        return;
+
+    initialized = true;
     const std::unique_ptr<REF::API>& api = REF::API::get();
     const REF::API::TDB* tdb = api->tdb();
     const REF::API::VMContext* context = api->get_vm_context();
