@@ -10,7 +10,7 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
 
     const REF::API::ManagedObject* camera_system = api->get_managed_singleton("app.ropeway.camera.CameraSystem");
     const REF::API::Method* get_camera_controller = tdb->find_method("app.ropeway.camera.CameraSystem", "getCameraController");
-    REF::API::ManagedObject* player_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(context, camera_system, 0);
+    const REF::API::ManagedObject* player_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(context, camera_system, 0);
 
     if (player_camera_controller == nullptr) {
         api->log_error("[REFix] Call to getCameraController failed.");
