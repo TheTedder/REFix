@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
+    <ClInclude Include="REFix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
