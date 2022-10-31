@@ -151,7 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h" />
+    <ClInclude Include="REFix.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="REFix.cpp" />
