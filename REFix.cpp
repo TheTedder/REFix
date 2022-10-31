@@ -14,7 +14,7 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
 
     if (player_camera_controller == nullptr) {
         api->log_error("[REFix] Call to getCameraController failed.");
-        return;
+        return false;
     }
 
     api->log_info("[REFix] Player Camera Controller found at %#.16llx", player_camera_controller);
@@ -24,4 +24,5 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
     const REF::API::Field* twirler_camera_settings_field = tdb->find_field("app.ropeway.camera.TwirlerCameraControllerRoot", "TwirlerCameraSettings");
     const REF::API::ManagedObject& twirler_camera_settings = twirler_camera_settings_field->get_data<REF::API::ManagedObject>(player_camera_controller);
     api->log_info("[REFix] Twirler Camera Settings found at %#.16llx", &twirler_camera_settings);
+    return true;
 }
