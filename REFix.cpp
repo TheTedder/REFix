@@ -1,8 +1,6 @@
 #include "REFix.h"
 
-namespace REF = reframework;
-
-extern "C" __declspec(dllexport) bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
+bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
     REF::API::initialize(param);
     const std::unique_ptr<REF::API>& api = REF::API::get();
     const REF::API::TDB* tdb = api->tdb();
