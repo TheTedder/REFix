@@ -15,7 +15,7 @@ extern "C" __declspec(dllexport) bool reframework_plugin_initialize(const REFram
     REF::API::ManagedObject* player_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(context, camera_system, 0);
 
     if (player_camera_controller == nullptr) {
-        api->log_warn("[REFix] Call to getCameraController failed.");
+        api->log_error("[REFix] Call to getCameraController failed.");
         return false;
     }
     
