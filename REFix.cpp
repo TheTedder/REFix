@@ -17,7 +17,7 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
         return false;
     }
 
-    api->log_info("[REFix] Player Camera Controller found at %#.16llx", player_camera_controller);
+    api->log_info("[REFix] Player Camera Controller found at %p", player_camera_controller);
 
     // Get the camera settings.
 
