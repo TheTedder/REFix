@@ -20,6 +20,12 @@ extern "C" __declspec(dllexport) bool reframework_plugin_initialize(const REFram
     }
     
     api->log_info("[REFix] Player Camera Controller found at %#.16llx", player_camera_controller);
+    
+    // Get the camera settings.
+
+    const REF::API::Field* twirler_camera_settings_field = tdb->find_field("app.ropeway.camera.TwirlerCameraControllerRoot", "TwirlerCameraSettings");
+    const REF::API::ManagedObject& twirler_camera_settings = twirler_camera_settings_field->get_data<REF::API::ManagedObject>(player_camera_controller);
+    api->log_info("[REFix] Twirler Camera Settings found at %#.16llx", &twirler_camera_settings);
 
     return true;
 }
