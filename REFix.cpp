@@ -21,8 +21,7 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
 
     // Get the camera settings.
 
-    const REF::API::Field* twirler_camera_settings_field = tdb->find_field("app.ropeway.camera.TwirlerCameraControllerRoot", "TwirlerCameraSettings");
-    const REF::API::ManagedObject& twirler_camera_settings = twirler_camera_settings_field->get_data<REF::API::ManagedObject>(player_camera_controller);
-    api->log_info("[REFix] Twirler Camera Settings found at %#.16llx", &twirler_camera_settings);
+    const REF::API::ManagedObject* twirler_camera_settings = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlerCameraSettings");
+    api->log_info("[REFix] Twirler Camera Settings found at %p", twirler_camera_settings);
     return true;
 }
