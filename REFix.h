@@ -12,3 +12,4 @@
 namespace REF = reframework;
 
 extern "C" __declspec(dllexport) bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam * param);
+void on_post_user_data();
