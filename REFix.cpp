@@ -8,6 +8,8 @@ extern "C" __declspec(dllexport) bool reframework_plugin_initialize(const REFram
     const REF::API::TDB* tdb = api->tdb();
     const REF::API::VMContext* context = api->get_vm_context();
 
+    // Get the player camera controller.
+
     const REF::API::ManagedObject* camera_system = api->get_managed_singleton("app.ropeway.camera.CameraSystem");
     const REF::API::TypeDefinition* camera_system_type = tdb->find_type("app.ropeway.camera.CameraSystem");
     const REF::API::Method* get_camera_controller = camera_system_type->find_method("getCameraController");
