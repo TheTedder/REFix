@@ -1,4 +1,6 @@
 #include "REFix.h"
+#include <memory>
+#include <cstdint>
 
 bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
     REF::API::initialize(param);
