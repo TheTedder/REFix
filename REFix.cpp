@@ -7,7 +7,16 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
     const std::unique_ptr<REF::API>& api = REF::API::get();
     const REF::API::TDB* const tdb = api->tdb();
     const REF::API::VMContext* const context = api->get_vm_context();
+
+    // Get pointers to important types, fields, and methods.
+
     const REF::API::Method* const get_camera_controller = tdb->find_method("app.ropeway.camera.CameraSystem", "getCameraController");
+    const REF::API::TypeDefinition* const animation_curve_type = tdb->find_type("via.AnimationCurve");
+    const REF::API::Method* const get_keys_count = animation_curve_type->find_method("getKeysCount");
+    const REF::API::Method* const get_keys = animation_curve_type->find_method("getKeys");
+    const REF::API::Method* const set_keys = animation_curve_type->find_method("setKeys");
+    const REF::API::TypeDefinition* const key_frame_type = tdb->find_type("via.KeyFrame");
+    const REF::API::Field* const value_field = key_frame_type->find_field("value");
 
     // Get the player camera controller.
 
