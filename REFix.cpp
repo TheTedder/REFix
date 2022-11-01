@@ -34,5 +34,12 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
 
     const REF::API::ManagedObject* const twirler_camera_settings = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlerCameraSettings");
     api->log_info("[REFix] Twirler Camera Settings found at %p", twirler_camera_settings);
+
+    // Get the speed curves.
+
+    const REF::API::ManagedObject* const normal_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("NormalSpeedCurve");
+    api->log_info("[REFix] Normal speed curve found at %p", normal_speed_curve);
+    const REF::API::ManagedObject* const hold_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("HoldSpeedCurve");
+    api->log_info("[REFix] Hold speed curve found at %p", hold_speed_curve);
     return true;
 }
