@@ -41,5 +41,36 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
     api->log_info("[REFix] Normal speed curve found at %p", normal_speed_curve);
     const REF::API::ManagedObject* const hold_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("HoldSpeedCurve");
     api->log_info("[REFix] Hold speed curve found at %p", hold_speed_curve);
+    REF::API::ManagedObject* const key_frame = key_frame_type->create_instance();
+    key_frame->add_ref();
+
+    // The camera speed is scaled based on your pitch by default. This sets the scale to 1.0 for all angles.
+
+    const auto flatten = [get_keys, context, value_field, get_keys_count, set_keys, key_frame](const REF::API::ManagedObject* animation_curve) {
+        const uint32_t key_count = get_keys_count->call<uint32_t>(context, animation_curve);
+
+        for (uint32_t i = 0; i < key_count; i++) {
+            const REF::API::ManagedObject* const keys_result = get_keys->call<REF::API::ManagedObject*>(key_frame, context, animation_curve, i);
+
+            if (keys_result == 0) {
+                REF::API::get()->log_warn("[REFix] Failed to retrieve KeyFrame %u for animation curve.", i);
+                continue;
+            }
+
+            // Give every KeyFrame a value of 1. This turns the curve into a flat line.
+            
+            float* const value = (float*)value_field->get_data_raw(key_frame, true);
+            *value = 1.0f;
+            set_keys->call(context, animation_curve, i, key_frame);
+        }
+    };
+
+    if (key_frame->get_ref_count() > 0) {
+        key_frame->release();
+    }
+
+    flatten(normal_speed_curve);
+    flatten(hold_speed_curve);
+
     return true;
 }
