@@ -151,10 +151,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationCurveMutator.h" />
+    <ClInclude Include="AnimCurveStraightener.h" />
+    <ClInclude Include="AnimCurveFlattener.h" />
+    <ClInclude Include="init.h" />
     <ClInclude Include="REFix.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="REFix.cpp" />
+    <ClCompile Include="AnimationCurveMutator.cpp" />
+    <ClCompile Include="AnimCurveFlattener.cpp" />
+    <ClCompile Include="AnimCurveStraightener.cpp" />
+    <ClCompile Include="init.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,9 +18,30 @@
     <ClInclude Include="REFix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AnimationCurveMutator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimCurveFlattener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimCurveStraightener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="init.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="REFix.cpp">
+    <ClCompile Include="AnimationCurveMutator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimCurveStraightener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimCurveFlattener.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="init.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
