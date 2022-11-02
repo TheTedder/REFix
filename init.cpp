@@ -1,7 +1,6 @@
 #include "init.h"
 #include "AnimCurveFlattener.h"
 #include "AnimCurveStraightener.h"
-#include <memory>
 
 namespace REFix {
     const REF::API::Method* get_keys_count;
