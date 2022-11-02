@@ -1,5 +1,6 @@
 #include "init.h"
 #include "AnimCurveFlattener.h"
+#include "AnimCurveStraightener.h"
 #include <memory>
 
 namespace REFix {
@@ -8,6 +9,8 @@ namespace REFix {
     const REF::API::Method* set_keys;
     const REF::API::TypeDefinition* key_frame_type;
     const REF::API::Field* value_field;
+    const REF::API::Field* in_normal_field;
+    const REF::API::Field* out_normal_field;
 
     bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
         REF::API::initialize(param);
