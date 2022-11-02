@@ -60,6 +60,13 @@ namespace REFix {
         const AnimationCurveFlattener flattener(1.0f);
         flattener.mutate(normal_speed_curve);
         flattener.mutate(hold_speed_curve);
+
+        // Straighten the input curve.
+
+        const REF::API::ManagedObject* input_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("InputCurve");
+        const AnimationCurveStraightener straightener;
+        straightener.mutate(input_curve);
+
         return true;
     }
 }
