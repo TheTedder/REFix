@@ -44,7 +44,7 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
     REF::API::ManagedObject* const key_frame = key_frame_type->create_instance();
     key_frame->add_ref();
 
-    // The camera speed is scaled based on your pitch by default. This sets the scale to 1.0 for all angles.
+    // The camera's yaw speed is scaled based on your pitch by default. This sets the scale to 1.0 for all angles.
 
     const auto flatten = [get_keys, context, value_field, get_keys_count, set_keys, key_frame](const REF::API::ManagedObject* animation_curve) {
         const uint32_t key_count = get_keys_count->call<uint32_t>(context, animation_curve);
