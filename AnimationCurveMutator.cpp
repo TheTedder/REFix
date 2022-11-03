@@ -22,7 +22,6 @@ namespace REFix {
             }
 
             operate(key_frame);
-
             set_keys->call(context, animation_curve, i, key_frame);
         }
     }
