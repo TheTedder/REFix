@@ -31,8 +31,6 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
     const REF::API::Method* const get_camera_controller = tdb->find_method("app.ropeway.camera.CameraSystem", "getCameraController");
     const REF::API::TypeDefinition* const damping_struct_single = tdb->find_type("app.ropeway.DampingStruct`1<System.Single>");
 
-    //const REF::API::Method* const key_frame_to_string = key_frame_type->find_method("ToString");
-
     // Get the player camera controller.
 
     const REF::API::ManagedObject* const camera_system = REF::API::get()->get_managed_singleton("app.ropeway.camera.CameraSystem");
