@@ -61,21 +61,28 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
 
     const REFix::AnimationCurveFlattener flattener(1.0f);
     flattener.mutate(normal_speed_curve);
+    REF::API::get()->log_info("[REFix] Normal speed curve flattened.");
     flattener.mutate(hold_speed_curve);
+    REF::API::get()->log_info("[REFix] Hold speed curve flattened.");
 
     // Straighten the input curve.
 
     const REF::API::ManagedObject* const input_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("InputCurve");
+    REF::API::get()->log_info("[REFix] Input curve found at %p", input_curve);
     const REFix::AnimationCurveStraightener straightener;
     straightener.mutate(input_curve);
+    REF::API::get()->log_info("[REFix] Input curve straightened.");
 
     // Remove input damping.
 
     REF::API::ManagedObject* const twirl_speed_yaw = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlSpeedYaw");
     REF::API::ManagedObject* const twirl_speed_pitch = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlSpeedPitch");
+    REF::API::get()->log_info("[REFix] Twirl speed yaw found at %p", twirl_speed_yaw);
+    REF::API::get()->log_info("[REFix] Twirl speed pitch found at %p", twirl_speed_pitch);
     const REFix::Undamper undamper(damping_struct_single);
     undamper.undamp(twirl_speed_yaw);
+    REF::API::get()->log_info("[REFix] Twirl speed yaw undamped.");
     undamper.undamp(twirl_speed_pitch);
-
+    REF::API::get()->log_info("[REFix] Twirl speed pitch undamped.");
     return true;
 }
