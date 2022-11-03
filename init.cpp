@@ -1,6 +1,7 @@
 #include "init.h"
 #include "AnimCurveFlattener.h"
 #include "AnimCurveStraightener.h"
+#include "Undamper.h"
 
 namespace REFix {
     const REF::API::Method* get_keys_count;
@@ -28,6 +29,7 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
     REFix::in_normal_field = REFix::key_frame_type->find_field("inNormal");
     REFix::out_normal_field = REFix::key_frame_type->find_field("outNormal");
     const REF::API::Method* const get_camera_controller = tdb->find_method("app.ropeway.camera.CameraSystem", "getCameraController");
+    const REF::API::TypeDefinition* const damping_struct_single = tdb->find_type("app.ropeway.DampingStruct`1<System.Single>");
 
     //const REF::API::Method* const key_frame_to_string = key_frame_type->find_method("ToString");
 
@@ -66,6 +68,14 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
     const REF::API::ManagedObject* const input_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("InputCurve");
     const REFix::AnimationCurveStraightener straightener;
     straightener.mutate(input_curve);
+
+    // Remove input damping.
+
+    REF::API::ManagedObject* const twirl_speed_yaw = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlSpeedYaw");
+    REF::API::ManagedObject* const twirl_speed_pitch = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlSpeedPitch");
+    const REFix::Undamper undamper(damping_struct_single);
+    undamper.undamp(twirl_speed_yaw);
+    undamper.undamp(twirl_speed_pitch);
 
     return true;
 }
