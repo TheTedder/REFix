@@ -156,12 +156,14 @@
     <ClInclude Include="AnimCurveFlattener.h" />
     <ClInclude Include="init.h" />
     <ClInclude Include="REFix.h" />
+    <ClInclude Include="Undamper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationCurveMutator.cpp" />
     <ClCompile Include="AnimCurveFlattener.cpp" />
     <ClCompile Include="AnimCurveStraightener.cpp" />
     <ClCompile Include="init.cpp" />
+    <ClCompile Include="Undamper.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
