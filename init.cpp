@@ -63,7 +63,7 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
 
     // Straighten the input curve.
 
-    const REF::API::ManagedObject* input_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("InputCurve");
+    const REF::API::ManagedObject* const input_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("InputCurve");
     const REFix::AnimationCurveStraightener straightener;
     straightener.mutate(input_curve);
 
