@@ -75,9 +75,9 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
 
     // Remove input damping.
 
-    REF::API::ManagedObject* const twirl_speed_yaw = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlSpeedYaw");
-    REF::API::ManagedObject* const twirl_speed_pitch = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlSpeedPitch");
+    REF::API::ManagedObject* const twirl_speed_yaw = *player_camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedYaw>k__BackingField");
     REF::API::get()->log_info("[REFix] Twirl speed yaw found at %p", twirl_speed_yaw);
+    REF::API::ManagedObject* const twirl_speed_pitch = *player_camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedPitch>k__BackingField");
     REF::API::get()->log_info("[REFix] Twirl speed pitch found at %p", twirl_speed_pitch);
     const REFix::Undamper undamper(damping_struct_single);
     undamper.undamp(twirl_speed_yaw);
