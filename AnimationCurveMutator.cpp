@@ -8,9 +8,9 @@ namespace REFix {
     extern const REF::API::Method* set_keys;
 
     void AnimationCurveMutator::mutate(const REF::API::ManagedObject* animation_curve) const {
-        const REF::API::VMContext* context = REF::API::get()->get_vm_context();
+        const REF::API::VMContext* const context = REF::API::get()->get_vm_context();
 
-        REF::API::ManagedObject* key_frame = key_frame_type->create_instance();
+        REF::API::ManagedObject* const key_frame = key_frame_type->create_instance();
         const uint32_t key_count = get_keys_count->call<uint32_t>(context, animation_curve);
 
         for (uint32_t i = 0U; i < key_count; i++) {
@@ -22,7 +22,6 @@ namespace REFix {
             }
 
             operate(key_frame);
-
             set_keys->call(context, animation_curve, i, key_frame);
         }
     }
