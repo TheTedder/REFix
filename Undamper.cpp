@@ -6,6 +6,6 @@ namespace REFix {
     }
 
     void Undamper::undamp(REF::API::ManagedObject* damping_struct) const {
-        *(float*)this->damping_time->get_data_raw(damping_struct, true) = 0.0f;
+        *(float*)this->damping_time->get_data_raw(damping_struct) = 0.0f;
     }
 }
