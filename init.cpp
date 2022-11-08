@@ -91,7 +91,7 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
 
     // Scale the input by the current FOV.
 
-    twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(REFix::pre_update_pitch_yaw, REFix::post_update_pitch_yaw, false);
+    twirler_camera_controller_root_type->find_method("updatePitch")->add_hook(REFix::pre_update_pitch_yaw, REFix::post_update_pitch_yaw, false);
     twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(REFix::pre_update_pitch_yaw, REFix::post_update_pitch_yaw, false);
     return true;
 }
