@@ -14,7 +14,10 @@ functionality is removed by the plugin and the mouse speed is the same no matter
 
 ### Removes input damping
 By default, it actually takes a fraction of a second for the mouse speed to reach maximum from a "standstill" (i.e. not moving the mouse)[^1], causing the
-player to experience so-called negative mouse acceleration. The plugin removes this feature, allowing the mouse to move at full speed at all times.
+player to experience so-called negative mouse acceleration. The plugin removes this behavior, allowing the mouse to move at full speed at all times.
+
+### FOV-dependent sensitivity
+The mouse sensitivity decreases when the FOV is lower and vice versa. This is most noticeable while aiming, and is intended to make hitting precise shots easier.
 
 ## Installation
 ### Prerequisites

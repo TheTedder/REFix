@@ -2,6 +2,7 @@
 #include "AnimCurveFlattener.h"
 #include "AnimCurveStraightener.h"
 #include "Undamper.h"
+#include "Hooks.h"
 
 namespace REFix {
     const REF::API::Method* get_keys_count;
@@ -11,6 +12,8 @@ namespace REFix {
     const REF::API::Field* value_field;
     const REF::API::Field* in_normal_field;
     const REF::API::Field* out_normal_field;
+    const REF::API::Field* camera_param_field;
+    const REF::API::Field* field_of_view_field;
 }
 
 bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
@@ -28,8 +31,11 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
     REFix::value_field = REFix::key_frame_type->find_field("value");
     REFix::in_normal_field = REFix::key_frame_type->find_field("inNormal");
     REFix::out_normal_field = REFix::key_frame_type->find_field("outNormal");
+    REFix::camera_param_field = tdb->find_field("app.ropeway.camera.CameraControllerRoot", "<CameraParam>k__BackingField");
+    REFix::field_of_view_field = tdb->find_field("app.ropeway.CameraParam", "FieldOfView");
     const REF::API::Method* const get_camera_controller = tdb->find_method("app.ropeway.camera.CameraSystem", "getCameraController");
     const REF::API::TypeDefinition* const damping_struct_single = tdb->find_type("app.ropeway.DampingStruct`1<System.Single>");
+    const REF::API::TypeDefinition* const twirler_camera_controller_root_type = tdb->find_type("app.ropeway.camera.TwirlerCameraControllerRoot");
 
     // Get the player camera controller.
 
@@ -82,5 +88,10 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
     REF::API::get()->log_info("[REFix] Twirl speed yaw undamped.");
     undamper.undamp(twirl_speed_pitch);
     REF::API::get()->log_info("[REFix] Twirl speed pitch undamped.");
+
+    // Scale the input by the current FOV.
+
+    twirler_camera_controller_root_type->find_method("updatePitch")->add_hook(REFix::pre_update_pitch_yaw, REFix::post_update_pitch_yaw, false);
+    twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(REFix::pre_update_pitch_yaw, REFix::post_update_pitch_yaw, false);
     return true;
 }

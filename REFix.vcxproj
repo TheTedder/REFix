@@ -154,6 +154,7 @@
     <ClInclude Include="AnimationCurveMutator.h" />
     <ClInclude Include="AnimCurveStraightener.h" />
     <ClInclude Include="AnimCurveFlattener.h" />
+    <ClInclude Include="Hooks.h" />
     <ClInclude Include="init.h" />
     <ClInclude Include="REFix.h" />
     <ClInclude Include="Undamper.h" />
@@ -162,6 +163,7 @@
     <ClCompile Include="AnimationCurveMutator.cpp" />
     <ClCompile Include="AnimCurveFlattener.cpp" />
     <ClCompile Include="AnimCurveStraightener.cpp" />
+    <ClCompile Include="Hooks.cpp" />
     <ClCompile Include="init.cpp" />
     <ClCompile Include="Undamper.cpp" />
   </ItemGroup>
