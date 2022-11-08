@@ -154,6 +154,7 @@
     <ClInclude Include="AnimationCurveMutator.h" />
     <ClInclude Include="AnimCurveStraightener.h" />
     <ClInclude Include="AnimCurveFlattener.h" />
+    <ClInclude Include="Hooks.h" />
     <ClInclude Include="init.h" />
     <ClInclude Include="REFix.h" />
     <ClInclude Include="Undamper.h" />
