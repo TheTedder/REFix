@@ -93,6 +93,9 @@ bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param
 
     twirler_camera_controller_root_type->find_method("updatePitch")->add_hook(REFix::pre_update_pitch_yaw, REFix::post_hook_null, false);
     twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(REFix::pre_update_pitch_yaw, REFix::post_hook_null, false);
+
+    // Remove dynamic difficulty modulation.
+
     tdb->find_method("app.ropeway.GameRankSystem", "addRankPointDirect")->add_hook(REFix::pre_add_rank_point_direct, REFix::post_hook_null, false);
     return true;
 }
