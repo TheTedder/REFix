@@ -19,7 +19,7 @@ namespace REFix {
 
     int pre_add_rank_point_direct(int argc, void** argv, REFrameworkTypeDefinitionHandle* arg_tys)
     {
-        RankPointType rankType = *(RankPointType*)&argv[3];
+        const RankPointType rankType = *(RankPointType*)&argv[3];
 
         if (
             rankType == RankPointType::FromFsm
