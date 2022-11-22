@@ -21,12 +21,10 @@ namespace REFix {
     {
         const RankPointType rankType = *(RankPointType*)&argv[3];
 
-        if (
-            rankType == RankPointType::FromFsm
-            || rankType == RankPointType::FromScript
-            || rankType == RankPointType::FromDirectSet
-            || rankType == RankPointType::FromDebug
-            ) {
+        if (rankType == RankPointType::FromFsm ||
+            rankType == RankPointType::FromScript ||
+            rankType == RankPointType::FromDirectSet ||
+            rankType == RankPointType::FromDebug) {
             return REFRAMEWORK_HOOK_CALL_ORIGINAL;
         }
 
