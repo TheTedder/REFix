@@ -19,6 +19,9 @@ player to experience so-called negative mouse acceleration. The plugin removes t
 ### FOV-dependent sensitivity
 The mouse sensitivity decreases when the FOV is lower and vice versa. This is most noticeable while aiming, and is intended to make hitting precise shots easier.
 
+### Removes dynamic difficulty
+Normally, certain actions in the game suck as firing a weapon, damaging an enemy, or taking damage yourself will cause the difficulty scale of the game to be adjusted slightly. This adds up over the course of a playthrough, resulting in unfairly tanky enemies if you play too well; therefore, the best strategy is to periodically take intentional damage to keep the game's difficulty low. This is undesireable because it actually rewards the player for playing worse, and lowers the skill ceiling by not allowing the player to get a feel for how many hits it takes to defeat each enemy. This mod removes this feature, although scripted difficulty changes are still present. For example, the difficult setting starts out low during the intro sequence at the gas station and then increases upon entering RPD.
+
 ## Installation
 ### Prerequisites
 * A compatible game (see above)
