@@ -1,10 +1,8 @@
 # REFix
-An REFramework plugin that fixes the mouse input in RE2R. This plugin is intended to be used by those playing with a mouse and keyboard. Controller players may
-not find it suitable.
+An REFramework plugin for RE2R that provides fixes and gameplay improvements. This plugin is intended to be used by those playing with a mouse and keyboard. Controller players may not find it suitable.
 
 ## Compatible Games/Versions
-This mod was created for the DX11 non-raytraced version of the Resident Evil 2 Remake. It may work on other versions of the game or even other games in the
-same engine but this has not been tested. Better compatibility is planned in future releases.
+This mod was created for the DX11 non-raytraced version of the Resident Evil 2 Remake. It may work on other versions of the game or even other games in the same engine but this has not been tested. Better compatibility is planned in future releases.
 
 ## Features
 
