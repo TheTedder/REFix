@@ -30,4 +30,11 @@ namespace REFix {
 
         return REFRAMEWORK_HOOK_SKIP_ORIGINAL;
     }
+    
+    int pre_set_interval_level(int argc, void** argv, REFrameworkTypeDefinitionHandle* arg_tys)
+    {
+        int32_t* level = (int32_t*)&argv[1];
+        level = 0;
+        return REFRAMEWORK_HOOK_CALL_ORIGINAL;
+    }
 }
