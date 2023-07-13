@@ -3,6 +3,7 @@
 #include "AnimCurveStraightener.h"
 #include "Undamper.h"
 #include "Hooks.h"
+#include "ZombieFix.h"
 
 bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
     return REFix::init(param);
