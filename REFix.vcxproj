@@ -156,6 +156,7 @@
     <ClInclude Include="AnimCurveFlattener.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Hooks.h" />
+    <ClInclude Include="Module.h" />
     <ClInclude Include="REFix.h" />
     <ClInclude Include="Undamper.h" />
   </ItemGroup>
@@ -165,6 +166,7 @@
     <ClCompile Include="AnimCurveStraightener.cpp" />
     <ClCompile Include="Hooks.cpp" />
     <ClCompile Include="init.cpp" />
+    <ClCompile Include="Module.cpp" />
     <ClCompile Include="Undamper.cpp" />
     <ClCompile Include="Version.cpp" />
   </ItemGroup>
