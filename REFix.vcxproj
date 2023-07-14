@@ -159,6 +159,7 @@
     <ClInclude Include="Module.h" />
     <ClInclude Include="REFix.h" />
     <ClInclude Include="Undamper.h" />
+    <ClInclude Include="ZombieFix.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationCurveMutator.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="Module.cpp" />
     <ClCompile Include="Undamper.cpp" />
     <ClCompile Include="Version.cpp" />
+    <ClCompile Include="ZombieFix.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

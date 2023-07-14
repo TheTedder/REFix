@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "REFix.h"
 #include "AnimCurveFlattener.h"
 #include "AnimCurveStraightener.h"
@@ -18,9 +20,11 @@ namespace REFix {
     const REF::API::Field* out_normal_field;
     const REF::API::Field* camera_param_field;
     const REF::API::Field* field_of_view_field;
+    std::unique_ptr<ZombieFix> zombie_fix;
 
     bool init(const REFrameworkPluginInitializeParam* param) {
         REF::API::initialize(param);
+        zombie_fix = std::make_unique<ZombieFix>();
         const REF::API::TDB* const tdb = REF::API::get()->tdb();
         const REF::API::VMContext* const context = REF::API::get()->get_vm_context();
 
@@ -103,8 +107,7 @@ namespace REFix {
 
         // Make zombies animate at 60fps.
 
-        tdb->find_method("app.ropeway.MotionIntervalController", "setIntervalLevel")->add_hook(REFix::pre_set_interval_level, REFix::post_hook_null, false);
-
+        enable_with_error(zombie_fix.get());
         return true;
     }
 }
