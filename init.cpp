@@ -4,6 +4,8 @@
 #include "AnimCurveStraightener.h"
 #include "Undamper.h"
 #include "Hooks.h"
+#include "ZombieFix.h"
+#include "FixRank.h"
 
 bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
     return REFix::init(param);
@@ -20,10 +22,12 @@ namespace REFix {
     const REF::API::Field* camera_param_field;
     const REF::API::Field* field_of_view_field;
     std::unique_ptr<ZombieFix> zombie_fix;
+    std::unique_ptr<FixRank> fix_rank;
 
     bool init(const REFrameworkPluginInitializeParam* param) {
         REF::API::initialize(param);
         zombie_fix = std::make_unique<ZombieFix>();
+        fix_rank = std::make_unique<FixRank>();
         const REF::API::TDB* const tdb = REF::API::get()->tdb();
         const REF::API::VMContext* const context = REF::API::get()->get_vm_context();
 
@@ -102,7 +106,7 @@ namespace REFix {
 
         // Remove dynamic difficulty modulation.
 
-        tdb->find_method("app.ropeway.GameRankSystem", "addRankPointDirect")->add_hook(pre_add_rank_point_direct, post_hook_null, false);
+        enable_with_error(fix_rank.get());
 
         // Make zombies animate at 60fps.
 
