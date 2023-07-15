@@ -100,11 +100,11 @@ namespace REFix {
         // Remove dynamic difficulty modulation.
 
         tdb->find_method("app.ropeway.GameRankSystem", "addRankPointDirect")->add_hook(pre_add_rank_point_direct, post_hook_null, false);
-    
+
         // Make zombies animate at 60fps.
 
-    tdb->find_method("app.ropeway.MotionIntervalController", "setIntervalLevel")->add_hook(REFix::pre_set_interval_level, REFix::post_hook_null, false);
-    
+        tdb->find_method("app.ropeway.MotionIntervalController", "setIntervalLevel")->add_hook(REFix::pre_set_interval_level, REFix::post_hook_null, false);
+
         return true;
     }
 }
