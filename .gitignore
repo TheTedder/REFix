@@ -429,3 +429,6 @@ FodyWeavers.xsd
 *.exe
 *.out
 *.app
+
+# vcpkg
+vcpkg_installed/
