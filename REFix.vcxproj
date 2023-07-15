@@ -158,6 +158,7 @@
     <ClInclude Include="Hooks.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="REFix.h" />
+    <ClInclude Include="SimpleHook.h" />
     <ClInclude Include="Undamper.h" />
     <ClInclude Include="ZombieFix.h" />
   </ItemGroup>
@@ -168,6 +169,7 @@
     <ClCompile Include="Hooks.cpp" />
     <ClCompile Include="init.cpp" />
     <ClCompile Include="Module.cpp" />
+    <ClCompile Include="SimpleHook.cpp" />
     <ClCompile Include="Undamper.cpp" />
     <ClCompile Include="Version.cpp" />
     <ClCompile Include="ZombieFix.cpp" />
