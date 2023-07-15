@@ -5,7 +5,8 @@
 #include "Hooks.h"
 
 bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
-    return REFix::init(param);
+    REF::API::initialize(param);
+    return REFix::init();
 }
 
 namespace REFix {
@@ -19,8 +20,7 @@ namespace REFix {
     const REF::API::Field* camera_param_field;
     const REF::API::Field* field_of_view_field;
 
-    bool init(const REFrameworkPluginInitializeParam* param) {
-        REF::API::initialize(param);
+    bool init() {
         const REF::API::TDB* const tdb = REF::API::get()->tdb();
         const REF::API::VMContext* const context = REF::API::get()->get_vm_context();
 
