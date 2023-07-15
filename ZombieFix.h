@@ -11,7 +11,7 @@ namespace REFix {
         }
 
         const char* internal_name() const override {
-            return "zombiefix";
+            return "Zombiefix";
         }
 
         static int pre_set_interval_level(int argc, void** argv, REFrameworkTypeDefinitionHandle* arg_tys);
