@@ -1,4 +1,4 @@
-#include "Version.h"
+#include "REFix.h"
 
 void reframework_plugin_required_version(REFrameworkPluginVersion* version) {
     version->major = REFRAMEWORK_PLUGIN_VERSION_MAJOR;
