@@ -1,6 +1,5 @@
 #include <memory>
 
-#include "REFix.h"
 #include "AnimCurveFlattener.h"
 #include "AnimCurveStraightener.h"
 #include "Undamper.h"
