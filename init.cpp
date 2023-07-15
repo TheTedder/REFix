@@ -3,9 +3,9 @@
 #include "AnimCurveFlattener.h"
 #include "AnimCurveStraightener.h"
 #include "Undamper.h"
-#include "Hooks.h"
 #include "ZombieFix.h"
 #include "FixRank.h"
+#include "InputScaling.h"
 
 bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
     return REFix::init(param);
@@ -19,15 +19,15 @@ namespace REFix {
     const REF::API::Field* value_field;
     const REF::API::Field* in_normal_field;
     const REF::API::Field* out_normal_field;
-    const REF::API::Field* camera_param_field;
-    const REF::API::Field* field_of_view_field;
     std::unique_ptr<ZombieFix> zombie_fix;
     std::unique_ptr<FixRank> fix_rank;
+    std::unique_ptr<InputScaling> input_scaling;
 
     bool init(const REFrameworkPluginInitializeParam* param) {
         REF::API::initialize(param);
         zombie_fix = std::make_unique<ZombieFix>();
         fix_rank = std::make_unique<FixRank>();
+        input_scaling = std::make_unique<InputScaling>();
         const REF::API::TDB* const tdb = REF::API::get()->tdb();
         const REF::API::VMContext* const context = REF::API::get()->get_vm_context();
 
@@ -41,11 +41,8 @@ namespace REFix {
         value_field = key_frame_type->find_field("value");
         in_normal_field = key_frame_type->find_field("inNormal");
         out_normal_field = key_frame_type->find_field("outNormal");
-        camera_param_field = tdb->find_field("app.ropeway.camera.CameraControllerRoot", "<CameraParam>k__BackingField");
-        field_of_view_field = tdb->find_field("app.ropeway.CameraParam", "FieldOfView");
         const REF::API::Method* const get_camera_controller = tdb->find_method("app.ropeway.camera.CameraSystem", "getCameraController");
         const REF::API::TypeDefinition* const damping_struct_single = tdb->find_type("app.ropeway.DampingStruct`1<System.Single>");
-        const REF::API::TypeDefinition* const twirler_camera_controller_root_type = tdb->find_type("app.ropeway.camera.TwirlerCameraControllerRoot");
 
         // Get the player camera controller.
 
@@ -101,8 +98,7 @@ namespace REFix {
 
         // Scale the input by the current FOV.
 
-        twirler_camera_controller_root_type->find_method("updatePitch")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
-        twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
+        enable_with_error(input_scaling.get());
 
         // Remove dynamic difficulty modulation.
 

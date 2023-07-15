@@ -156,7 +156,7 @@
     <ClInclude Include="AnimCurveFlattener.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="FixRank.h" />
-    <ClInclude Include="Hooks.h" />
+    <ClInclude Include="InputScaling.h" />
     <ClInclude Include="Module.h" />
     <ClInclude Include="REFix.h" />
     <ClInclude Include="SimpleHook.h" />
@@ -168,8 +168,8 @@
     <ClCompile Include="AnimCurveFlattener.cpp" />
     <ClCompile Include="AnimCurveStraightener.cpp" />
     <ClCompile Include="FixRank.cpp" />
-    <ClCompile Include="Hooks.cpp" />
     <ClCompile Include="init.cpp" />
+    <ClCompile Include="InputScaling.cpp" />
     <ClCompile Include="Module.cpp" />
     <ClCompile Include="SimpleHook.cpp" />
     <ClCompile Include="Undamper.cpp" />
