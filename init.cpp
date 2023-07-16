@@ -7,11 +7,6 @@
 #include "Undamper.h"
 #include "Hooks.h"
 
-bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
-    REF::API::initialize(param);
-    return REFix::init();
-}
-
 namespace REFix {
     const REF::API::Method* get_keys_count;
     const REF::API::Method* get_keys;
@@ -145,4 +140,9 @@ namespace REFix {
 
         return true;
     }
+}
+
+bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
+    REF::API::initialize(param);
+    return REFix::init();
 }
