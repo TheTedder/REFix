@@ -17,31 +17,21 @@ namespace REFix {
     const REF::API::Field* out_normal_field;
     const REF::API::Field* camera_param_field;
     const REF::API::Field* field_of_view_field;
+    libconfig::Config config;
+
+    bool check_or_set(const char* name) {
+        bool value = true;
+
+        if (!config.lookupValue(name, value)) {
+            config.getRoot().add(name, libconfig::Setting::TypeBoolean) = true;
+        }
+
+        return value;
+    }
 
     bool init() {
-        libconfig::Config config;
-
-        if (_tmkdir(_TEXT(".\\reframework\\data")) == 0 || _taccess_s(_TEXT(".\\reframework\\data\\refix_config.txt"), 0) != 0) {
-            // The data directory or config file did not exist. Create the config.
-
-            libconfig::Setting& root = config.getRoot();
-            root.add("disable-input-pitch-scaling", libconfig::Setting::TypeBoolean) = true;
-            root.add("remove-input-damping", libconfig::Setting::TypeBoolean) = true;
-            root.add("scale-input-with-fov", libconfig::Setting::TypeBoolean) = true;
-            root.add("remove-dynamic-difficulty", libconfig::Setting::TypeBoolean) = true;
-            root.add("fix-zombie-anims", libconfig::Setting::TypeBoolean) = true;
-
-            try {
-                config.writeFile(".\\reframework\\data\\refix_config.txt");
-            }
-            catch (libconfig::FileIOException) {
-                REF::API::get()->log_warn("[REFix] Could not generate config.");
-            }
-
-            REF::API::get()->log_info("[REFix] Successfully generated config -> .\\reframework\\data\\refix_config.txt");
-        }
-        else {
-            // Read the config.
+        if (_tmkdir(_TEXT(".\\reframework\\data")) != 0) {
+            // The data directory exists. Read the config.
 
             try {
                 config.readFile(".\\reframework\\data\\refix_config.txt");
@@ -64,14 +54,7 @@ namespace REFix {
         get_keys = animation_curve_type->find_method("getKeys");
         set_keys = animation_curve_type->find_method("setKeys");
         key_frame_type = tdb->find_type("via.KeyFrame");
-        value_field = key_frame_type->find_field("value");
-        in_normal_field = key_frame_type->find_field("inNormal");
-        out_normal_field = key_frame_type->find_field("outNormal");
-        camera_param_field = tdb->find_field("app.ropeway.camera.CameraControllerRoot", "<CameraParam>k__BackingField");
-        field_of_view_field = tdb->find_field("app.ropeway.CameraParam", "FieldOfView");
         const REF::API::Method* const get_camera_controller = tdb->find_method("app.ropeway.camera.CameraSystem", "getCameraController");
-        const REF::API::TypeDefinition* const damping_struct_single = tdb->find_type("app.ropeway.DampingStruct`1<System.Single>");
-        const REF::API::TypeDefinition* const twirler_camera_controller_root_type = tdb->find_type("app.ropeway.camera.TwirlerCameraControllerRoot");
 
         // Get the player camera controller.
 
@@ -90,53 +73,81 @@ namespace REFix {
         const REF::API::ManagedObject* const twirler_camera_settings = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlerCameraSettings");
         REF::API::get()->log_info("[REFix] Twirler Camera Settings found at %p", twirler_camera_settings);
 
-        // Get the speed curves.
+        if (check_or_set("disable-input-pitch-scaling")) {
+            // Get the speed curves.
 
-        const REF::API::ManagedObject* const normal_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("NormalSpeedCurve");
-        REF::API::get()->log_info("[REFix] Normal speed curve found at %p", normal_speed_curve);
-        const REF::API::ManagedObject* const hold_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("HoldSpeedCurve");
-        REF::API::get()->log_info("[REFix] Hold speed curve found at %p", hold_speed_curve);
+            const REF::API::ManagedObject* const normal_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("NormalSpeedCurve");
+            REF::API::get()->log_info("[REFix] Normal speed curve found at %p", normal_speed_curve);
+            const REF::API::ManagedObject* const hold_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("HoldSpeedCurve");
+            REF::API::get()->log_info("[REFix] Hold speed curve found at %p", hold_speed_curve);
 
-        // The camera's yaw speed is scaled based on your pitch by default. This sets the scale to 1.0 for all angles.
+            // The camera's yaw speed is scaled based on your pitch by default. This sets the scale to 1.0 for all angles.
 
-        const AnimationCurveFlattener flattener(1.0f);
-        flattener.mutate(normal_speed_curve);
-        REF::API::get()->log_info("[REFix] Normal speed curve flattened.");
-        flattener.mutate(hold_speed_curve);
-        REF::API::get()->log_info("[REFix] Hold speed curve flattened.");
+            value_field = key_frame_type->find_field("value");
+            const AnimationCurveFlattener flattener(1.0f);
+            flattener.mutate(normal_speed_curve);
+            REF::API::get()->log_info("[REFix] Normal speed curve flattened.");
+            flattener.mutate(hold_speed_curve);
+            REF::API::get()->log_info("[REFix] Hold speed curve flattened.");
+        }
 
-        // Straighten the input curve.
+        if (check_or_set("remove-input-damping")) {
+            // Straighten the input curve.
 
-        const REF::API::ManagedObject* const input_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("InputCurve");
-        REF::API::get()->log_info("[REFix] Input curve found at %p", input_curve);
-        const AnimationCurveStraightener straightener;
-        straightener.mutate(input_curve);
-        REF::API::get()->log_info("[REFix] Input curve straightened.");
+            const REF::API::ManagedObject* const input_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("InputCurve");
+            REF::API::get()->log_info("[REFix] Input curve found at %p", input_curve);
+            in_normal_field = key_frame_type->find_field("inNormal");
+            out_normal_field = key_frame_type->find_field("outNormal");
+            const AnimationCurveStraightener straightener;
+            straightener.mutate(input_curve);
+            REF::API::get()->log_info("[REFix] Input curve straightened.");
 
-        // Remove input damping.
+            // Remove input damping.
 
-        REF::API::ManagedObject* const twirl_speed_yaw = *player_camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedYaw>k__BackingField");
-        REF::API::get()->log_info("[REFix] Twirl speed yaw found at %p", twirl_speed_yaw);
-        REF::API::ManagedObject* const twirl_speed_pitch = *player_camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedPitch>k__BackingField");
-        REF::API::get()->log_info("[REFix] Twirl speed pitch found at %p", twirl_speed_pitch);
-        const Undamper undamper(damping_struct_single);
-        undamper.undamp(twirl_speed_yaw);
-        REF::API::get()->log_info("[REFix] Twirl speed yaw undamped.");
-        undamper.undamp(twirl_speed_pitch);
-        REF::API::get()->log_info("[REFix] Twirl speed pitch undamped.");
+            const REF::API::TypeDefinition* const damping_struct_single = tdb->find_type("app.ropeway.DampingStruct`1<System.Single>");
+            REF::API::ManagedObject* const twirl_speed_yaw = *player_camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedYaw>k__BackingField");
+            REF::API::get()->log_info("[REFix] Twirl speed yaw found at %p", twirl_speed_yaw);
+            REF::API::ManagedObject* const twirl_speed_pitch = *player_camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedPitch>k__BackingField");
+            REF::API::get()->log_info("[REFix] Twirl speed pitch found at %p", twirl_speed_pitch);
+            const Undamper undamper(damping_struct_single);
+            undamper.undamp(twirl_speed_yaw);
+            REF::API::get()->log_info("[REFix] Twirl speed yaw undamped.");
+            undamper.undamp(twirl_speed_pitch);
+            REF::API::get()->log_info("[REFix] Twirl speed pitch undamped.");
+        }
 
-        // Scale the input by the current FOV.
+        if (check_or_set("scale-input-with-fov")) {
+            // Scale the input by the current FOV.
 
-        twirler_camera_controller_root_type->find_method("updatePitch")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
-        twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
+            camera_param_field = tdb->find_field("app.ropeway.camera.CameraControllerRoot", "<CameraParam>k__BackingField");
+            field_of_view_field = tdb->find_field("app.ropeway.CameraParam", "FieldOfView");
+            const REF::API::TypeDefinition* const twirler_camera_controller_root_type = tdb->find_type("app.ropeway.camera.TwirlerCameraControllerRoot");
+            twirler_camera_controller_root_type->find_method("updatePitch")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
+            twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
+        }
 
-        // Remove dynamic difficulty modulation.
+        if (check_or_set("remove-dynamic-difficulty"))
+        {
+            // Remove dynamic difficulty modulation.
 
-        tdb->find_method("app.ropeway.GameRankSystem", "addRankPointDirect")->add_hook(pre_add_rank_point_direct, post_hook_null, false);
+            tdb->find_method("app.ropeway.GameRankSystem", "addRankPointDirect")->add_hook(pre_add_rank_point_direct, post_hook_null, false);
+        }
 
-        // Make zombies animate at 60fps.
+        if (check_or_set("fix-zombie-anims"))
+        {
+            // Make zombies animate at 60fps.
 
-        tdb->find_method("app.ropeway.MotionIntervalController", "setIntervalLevel")->add_hook(REFix::pre_set_interval_level, REFix::post_hook_null, false);
+            tdb->find_method("app.ropeway.MotionIntervalController", "setIntervalLevel")->add_hook(REFix::pre_set_interval_level, REFix::post_hook_null, false);
+        }
+
+        // Write the config in case any settings were changed.
+
+        try {
+            config.writeFile(".\\reframework\\data\\refix_config.txt");
+        }
+        catch (libconfig::FileIOException) {
+            REF::API::get()->log_warn("[REFix] Could not write to the config.");
+        }
 
         return true;
     }
