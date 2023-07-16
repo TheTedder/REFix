@@ -1,3 +1,6 @@
+#include <tchar.h>
+#include <libconfig.h++>
+
 #include "REFix.h"
 #include "AnimCurveFlattener.h"
 #include "AnimCurveStraightener.h"
@@ -21,6 +24,41 @@ namespace REFix {
     const REF::API::Field* field_of_view_field;
 
     bool init() {
+        libconfig::Config config;
+
+        if (_tmkdir(_TEXT(".\\reframework\\data")) == 0 || _taccess_s(_TEXT(".\\reframework\\data\\refix_config.txt"), 0) != 0) {
+            // The data directory or config file did not exist. Create the config.
+
+            libconfig::Setting& root = config.getRoot();
+            root.add("disable-input-pitch-scaling", libconfig::Setting::TypeBoolean) = true;
+            root.add("remove-input-damping", libconfig::Setting::TypeBoolean) = true;
+            root.add("scale-input-with-fov", libconfig::Setting::TypeBoolean) = true;
+            root.add("remove-dynamic-difficulty", libconfig::Setting::TypeBoolean) = true;
+            root.add("fix-zombie-anims", libconfig::Setting::TypeBoolean) = true;
+
+            try {
+                config.writeFile(".\\reframework\\data\\refix_config.txt");
+            }
+            catch (libconfig::FileIOException) {
+                REF::API::get()->log_warn("[REFix] Could not generate config.");
+            }
+
+            REF::API::get()->log_info("[REFix] Successfully generated config -> .\\reframework\\data\\refix_config.txt");
+        }
+        else {
+            // Read the config.
+
+            try {
+                config.readFile(".\\reframework\\data\\refix_config.txt");
+            }
+            catch (const libconfig::FileIOException&) {
+                REF::API::get()->log_warn("[REFix] Failed to open the config.");
+            }
+            catch (const libconfig::ParseException& p) {
+                REF::API::get()->log_warn("[REFix] Config parse error: %s", p.getError());
+            }
+        }
+
         const REF::API::TDB* const tdb = REF::API::get()->tdb();
         const REF::API::VMContext* const context = REF::API::get()->get_vm_context();
 
