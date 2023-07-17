@@ -1,4 +1,4 @@
-#include <tchar.h>
+#include <filesystem>
 #include <libconfig.h++>
 
 #include "REFix.h"
@@ -6,6 +6,8 @@
 #include "AnimCurveStraightener.h"
 #include "Undamper.h"
 #include "Hooks.h"
+
+namespace fs = std::filesystem;
 
 namespace REFix {
     const REF::API::Method* get_keys_count;
@@ -30,7 +32,9 @@ namespace REFix {
     }
 
     bool init() {
-        if (_tmkdir(_TEXT(".\\reframework\\data")) != 0) {
+        if (!fs::create_directory(
+            fs::path(".\\reframework\\data", fs::path::native_format)
+        )) {
             // The data directory exists. Read the config.
 
             try {
