@@ -1,6 +1,11 @@
 #pragma once
 #include <reframework/API.hpp>
 
+// hack
+#define _STR(S) #S
+#define STR(S) _STR(S)
+constexpr const char GAME_STRING[] = STR(GAME);
+
 namespace REF = reframework;
 
 namespace REFix {

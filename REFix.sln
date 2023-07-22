@@ -7,14 +7,20 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "REFix", "REFix.vcxproj", "{
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Release|x64 = Release|x64
+		RE2_TDB66Debug|x64 = RE2_TDB66Debug|x64
+		RE2_TDB66Release|x64 = RE2_TDB66Release|x64
+		RE2Debug|x64 = RE2Debug|x64
+		RE2Release|x64 = RE2Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.Debug|x64.ActiveCfg = Debug|x64
-		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.Debug|x64.Build.0 = Debug|x64
-		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.Release|x64.ActiveCfg = Release|x64
-		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.Release|x64.Build.0 = Release|x64
+		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.RE2_TDB66Debug|x64.ActiveCfg = RE2_TDB66Debug|x64
+		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.RE2_TDB66Debug|x64.Build.0 = RE2_TDB66Debug|x64
+		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.RE2_TDB66Release|x64.ActiveCfg = RE2_TDB66Release|x64
+		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.RE2_TDB66Release|x64.Build.0 = RE2_TDB66Release|x64
+		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.RE2Debug|x64.ActiveCfg = RE2Debug|x64
+		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.RE2Debug|x64.Build.0 = RE2Debug|x64
+		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.RE2Release|x64.ActiveCfg = RE2Release|x64
+		{D1E885D9-C511-46C1-83D5-43AB4539A81D}.RE2Release|x64.Build.0 = RE2Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
