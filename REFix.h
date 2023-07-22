@@ -1,6 +1,10 @@
 #pragma once
 #include <reframework/API.hpp>
 
+// hack
+#define _STR(S) #S
+#define STR(S) _STR(S)
+
 namespace REF = reframework;
 
 namespace REFix {
