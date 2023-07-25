@@ -58,11 +58,11 @@ namespace REFix {
         get_keys = animation_curve_type->find_method("getKeys");
         set_keys = animation_curve_type->find_method("setKeys");
         key_frame_type = tdb->find_type("via.KeyFrame");
-        const REF::API::Method* const get_camera_controller = tdb->find_method("app.ropeway.camera.CameraSystem", "getCameraController");
+        const REF::API::Method* const get_camera_controller = tdb->find_method(PREFIX ".camera.CameraSystem", "getCameraController");
 
         // Get the player camera controller.
 
-        const REF::API::ManagedObject* const camera_system = REF::API::get()->get_managed_singleton("app.ropeway.camera.CameraSystem");
+        const REF::API::ManagedObject* const camera_system = REF::API::get()->get_managed_singleton(PREFIX ".camera.CameraSystem");
         const REF::API::ManagedObject* const player_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(context, camera_system, 0);
 
         if (player_camera_controller == nullptr) {
@@ -108,7 +108,7 @@ namespace REFix {
 
             // Remove input damping.
 
-            const REF::API::TypeDefinition* const damping_struct_single = tdb->find_type("app.ropeway.DampingStruct`1<System.Single>");
+            const REF::API::TypeDefinition* const damping_struct_single = tdb->find_type(PREFIX ".DampingStruct`1<System.Single>");
             REF::API::ManagedObject* const twirl_speed_yaw = *player_camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedYaw>k__BackingField");
             REF::API::get()->log_info("[REFix] Twirl speed yaw found at %p", twirl_speed_yaw);
             REF::API::ManagedObject* const twirl_speed_pitch = *player_camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedPitch>k__BackingField");
@@ -123,9 +123,9 @@ namespace REFix {
         if (check_or_set("scale-input-with-fov")) {
             // Scale the input by the current FOV.
 
-            camera_param_field = tdb->find_field("app.ropeway.camera.CameraControllerRoot", "<CameraParam>k__BackingField");
-            field_of_view_field = tdb->find_field("app.ropeway.CameraParam", "FieldOfView");
-            const REF::API::TypeDefinition* const twirler_camera_controller_root_type = tdb->find_type("app.ropeway.camera.TwirlerCameraControllerRoot");
+            camera_param_field = tdb->find_field(PREFIX ".camera.CameraControllerRoot", "<CameraParam>k__BackingField");
+            field_of_view_field = tdb->find_field(PREFIX ".CameraParam", "FieldOfView");
+            const REF::API::TypeDefinition* const twirler_camera_controller_root_type = tdb->find_type(PREFIX ".camera.TwirlerCameraControllerRoot");
             twirler_camera_controller_root_type->find_method("updatePitch")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
             twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
         }
@@ -134,14 +134,14 @@ namespace REFix {
         {
             // Remove dynamic difficulty modulation.
 
-            tdb->find_method("app.ropeway.GameRankSystem", "addRankPointDirect")->add_hook(pre_add_rank_point_direct, post_hook_null, false);
+            tdb->find_method(PREFIX ".GameRankSystem", "addRankPointDirect")->add_hook(pre_add_rank_point_direct, post_hook_null, false);
         }
 
         if (check_or_set("fix-zombie-anims"))
         {
             // Make zombies animate at 60fps.
 
-            tdb->find_method("app.ropeway.MotionIntervalController", "setIntervalLevel")->add_hook(REFix::pre_set_interval_level, REFix::post_hook_null, false);
+            tdb->find_method(PREFIX ".MotionIntervalController", "setIntervalLevel")->add_hook(REFix::pre_set_interval_level, REFix::post_hook_null, false);
         }
 
         // Write the config in case any settings were changed.
