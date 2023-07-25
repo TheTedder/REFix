@@ -31,6 +31,48 @@ namespace REFix {
         return value;
     }
 
+    void disable_input_pitch_scaling(const reframework::API::ManagedObject* twirler_camera_settings)
+    {
+        // Get the speed curves.
+
+        const REF::API::ManagedObject* const normal_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("NormalSpeedCurve");
+        REF::API::get()->log_info("[REFix] Normal speed curve found at %p", normal_speed_curve);
+        const REF::API::ManagedObject* const hold_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("HoldSpeedCurve");
+        REF::API::get()->log_info("[REFix] Hold speed curve found at %p", hold_speed_curve);
+
+        // The camera's yaw speed is scaled based on your pitch by default. This sets the scale to 1.0 for all angles.
+        
+        const AnimationCurveFlattener flattener(1.0f);
+        flattener.mutate(normal_speed_curve);
+        REF::API::get()->log_info("[REFix] Normal speed curve flattened.");
+        flattener.mutate(hold_speed_curve);
+        REF::API::get()->log_info("[REFix] Hold speed curve flattened.");
+    }
+
+    void remove_input_damping(const reframework::API::ManagedObject* twirler_camera_settings, const reframework::API::ManagedObject* camera_controller)
+    {
+        // Straighten the input curve.
+
+        const REF::API::ManagedObject* const input_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("InputCurve");
+        REF::API::get()->log_info("[REFix] Input curve found at %p", input_curve);
+        const AnimationCurveStraightener straightener;
+        straightener.mutate(input_curve);
+        REF::API::get()->log_info("[REFix] Input curve straightened.");
+
+        // Remove input damping.
+
+        const REF::API::TypeDefinition* const damping_struct_single = REF::API::get()->tdb()->find_type(PREFIX ".DampingStruct`1<System.Single>");
+        REF::API::ManagedObject* const twirl_speed_yaw = *camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedYaw>k__BackingField");
+        REF::API::get()->log_info("[REFix] Twirl speed yaw found at %p", twirl_speed_yaw);
+        REF::API::ManagedObject* const twirl_speed_pitch = *camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedPitch>k__BackingField");
+        REF::API::get()->log_info("[REFix] Twirl speed pitch found at %p", twirl_speed_pitch);
+        const Undamper undamper(damping_struct_single);
+        undamper.undamp(twirl_speed_yaw);
+        REF::API::get()->log_info("[REFix] Twirl speed yaw undamped.");
+        undamper.undamp(twirl_speed_pitch);
+        REF::API::get()->log_info("[REFix] Twirl speed pitch undamped.");
+    }
+
     bool init() {
         if (!fs::create_directory(
             fs::path(".\\reframework\\data", fs::path::native_format)
@@ -66,58 +108,50 @@ namespace REFix {
         const REF::API::ManagedObject* const player_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(context, camera_system, 0);
 
         if (player_camera_controller == nullptr) {
-            REF::API::get()->log_error("[REFix] Call to getCameraController failed.");
+            REF::API::get()->log_error("[REFix] Call to getCameraController(0) failed.");
             return false;
         }
 
         REF::API::get()->log_info("[REFix] Player Camera Controller found at %p", player_camera_controller);
+
+#ifdef RE3
+        const REF::API::ManagedObject* const player_sight_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(context, camera_system, 1);
+
+        if (player_sight_camera_controller == nullptr) {
+            REF::API::get()->log_error("[REFix] Call to getCameraController(1) failed.");
+            return false;
+        }
+
+        REF::API::get()->log_info("[REFix] Player Sight Camera Controller found at %p", player_sight_camera_controller);
+#endif
 
         // Get the camera settings.
 
         const REF::API::ManagedObject* const twirler_camera_settings = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlerCameraSettings");
         REF::API::get()->log_info("[REFix] Twirler Camera Settings found at %p", twirler_camera_settings);
 
+#ifdef RE3
+        const REF::API::ManagedObject* const sight_twirler_camera_settings = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlerCameraSettings");
+        REF::API::get()->log_info("[REFix] Sight Twirler Camera Settings found at %p", sight_twirler_camera_settings);
+#endif
+
         if (check_or_set("disable-input-pitch-scaling")) {
-            // Get the speed curves.
-
-            const REF::API::ManagedObject* const normal_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("NormalSpeedCurve");
-            REF::API::get()->log_info("[REFix] Normal speed curve found at %p", normal_speed_curve);
-            const REF::API::ManagedObject* const hold_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("HoldSpeedCurve");
-            REF::API::get()->log_info("[REFix] Hold speed curve found at %p", hold_speed_curve);
-
-            // The camera's yaw speed is scaled based on your pitch by default. This sets the scale to 1.0 for all angles.
-
             value_field = key_frame_type->find_field("value");
-            const AnimationCurveFlattener flattener(1.0f);
-            flattener.mutate(normal_speed_curve);
-            REF::API::get()->log_info("[REFix] Normal speed curve flattened.");
-            flattener.mutate(hold_speed_curve);
-            REF::API::get()->log_info("[REFix] Hold speed curve flattened.");
+            disable_input_pitch_scaling(twirler_camera_settings);
+
+#ifdef RE3
+            disable_input_pitch_scaling(sight_twirler_camera_settings);
+#endif
         }
 
         if (check_or_set("remove-input-damping")) {
-            // Straighten the input curve.
-
-            const REF::API::ManagedObject* const input_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("InputCurve");
-            REF::API::get()->log_info("[REFix] Input curve found at %p", input_curve);
             in_normal_field = key_frame_type->find_field("inNormal");
             out_normal_field = key_frame_type->find_field("outNormal");
-            const AnimationCurveStraightener straightener;
-            straightener.mutate(input_curve);
-            REF::API::get()->log_info("[REFix] Input curve straightened.");
+            remove_input_damping(twirler_camera_settings, player_camera_controller);
 
-            // Remove input damping.
-
-            const REF::API::TypeDefinition* const damping_struct_single = tdb->find_type(PREFIX ".DampingStruct`1<System.Single>");
-            REF::API::ManagedObject* const twirl_speed_yaw = *player_camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedYaw>k__BackingField");
-            REF::API::get()->log_info("[REFix] Twirl speed yaw found at %p", twirl_speed_yaw);
-            REF::API::ManagedObject* const twirl_speed_pitch = *player_camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedPitch>k__BackingField");
-            REF::API::get()->log_info("[REFix] Twirl speed pitch found at %p", twirl_speed_pitch);
-            const Undamper undamper(damping_struct_single);
-            undamper.undamp(twirl_speed_yaw);
-            REF::API::get()->log_info("[REFix] Twirl speed yaw undamped.");
-            undamper.undamp(twirl_speed_pitch);
-            REF::API::get()->log_info("[REFix] Twirl speed pitch undamped.");
+#ifdef RE3
+            remove_input_damping(sight_twirler_camera_settings, player_sight_camera_controller);
+#endif
         }
 
         if (check_or_set("scale-input-with-fov")) {
