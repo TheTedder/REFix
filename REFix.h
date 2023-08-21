@@ -1,10 +1,25 @@
 #pragma once
 #include <reframework/API.hpp>
 
-// hack
-#define _STR(S) #S
-#define STR(S) _STR(S)
-constexpr const char GAME_STRING[] = STR(GAME);
+#ifdef RE2
+#define PREFIX "app.ropeway"
+
+#if TDB_VERSION == 66
+#define GAME "RE2_TDB66"
+#elif TDB_VERSION == 70
+#define GAME "RE2"
+#endif
+
+#elif defined(RE3)
+#define PREFIX "offline"
+
+#if TDB_VERSION == 67
+#define GAME "RE3_TDB67"
+#elif TDB_VERSION == 70
+#define GAME "RE3"
+#endif
+
+#endif
 
 namespace REF = reframework;
 
