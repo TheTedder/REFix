@@ -7,7 +7,7 @@ namespace REFix {
     /// Flattens an AnimationCurve by setting all its KeyFrames to one specific value.
     /// </summary>
     class AnimationCurveFlattener : public AnimationCurveMutator {
-        float value;
+        const float value;
 
     public:
         /// <summary>
