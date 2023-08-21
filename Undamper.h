@@ -6,7 +6,7 @@ namespace REFix {
     /// Removes all damping behavior from a DampingStruct.
     /// </summary>
     class Undamper {
-        const REF::API::Field* damping_time;
+        const REF::API::Field* const damping_time;
 
     public:
         /// <param name="damping_struct_type">

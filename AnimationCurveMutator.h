@@ -3,7 +3,7 @@
 
 namespace REFix {
     /// <summary>
-    /// Performs an operation on an AnimationCurve by iterating overing its KeyFrames.
+    /// Performs an operation on an AnimationCurve by iterating over its KeyFrames.
     /// </summary>
     class AnimationCurveMutator {
     public:
