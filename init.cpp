@@ -19,6 +19,7 @@ namespace REFix {
     const REF::API::Field* out_normal_field;
     const REF::API::Field* camera_param_field;
     const REF::API::Field* field_of_view_field;
+    const REF::API::TypeDefinition* damping_struct_single;
     libconfig::Config config;
 
     bool check_or_set(const char* name) {
@@ -49,7 +50,10 @@ namespace REFix {
         REF::API::get()->log_info("[REFix] Hold speed curve flattened.");
     }
 
-    void remove_input_damping(const reframework::API::ManagedObject* twirler_camera_settings, const reframework::API::ManagedObject* camera_controller)
+    void remove_input_damping(
+        const reframework::API::ManagedObject* twirler_camera_settings,
+        const reframework::API::ManagedObject* camera_controller
+    )
     {
         // Straighten the input curve.
 
@@ -61,10 +65,16 @@ namespace REFix {
 
         // Remove input damping.
 
-        const REF::API::TypeDefinition* const damping_struct_single = REF::API::get()->tdb()->find_type(PREFIX ".DampingStruct`1<System.Single>");
-        REF::API::ManagedObject* const twirl_speed_yaw = *camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedYaw>k__BackingField");
+        REF::API::ManagedObject* const twirl_speed_yaw = *camera_controller->get_field<REF::API::ManagedObject*>(
+            "<TwirlSpeedYaw>k__BackingField"
+        );
+
         REF::API::get()->log_info("[REFix] Twirl speed yaw found at %p", twirl_speed_yaw);
-        REF::API::ManagedObject* const twirl_speed_pitch = *camera_controller->get_field<REF::API::ManagedObject*>("<TwirlSpeedPitch>k__BackingField");
+
+        REF::API::ManagedObject* const twirl_speed_pitch = *camera_controller->get_field<REF::API::ManagedObject*>(
+            "<TwirlSpeedPitch>k__BackingField"
+        );
+
         REF::API::get()->log_info("[REFix] Twirl speed pitch found at %p", twirl_speed_pitch);
         const Undamper undamper(damping_struct_single);
         undamper.undamp(twirl_speed_yaw);
@@ -147,6 +157,7 @@ namespace REFix {
         if (check_or_set("remove-input-damping")) {
             in_normal_field = key_frame_type->find_field("inNormal");
             out_normal_field = key_frame_type->find_field("outNormal");
+            damping_struct_single = REF::API::get()->tdb()->find_type(PREFIX ".DampingStruct`1<System.Single>");
             remove_input_damping(twirler_camera_settings, player_camera_controller);
 
 #ifdef RE3
