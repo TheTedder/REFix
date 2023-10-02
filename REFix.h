@@ -24,7 +24,7 @@
 namespace REF = reframework;
 
 namespace REFix {
-    static void post_hook_null(void** ret_val, REFrameworkTypeDefinitionHandle ret_ty) {}
+    static void post_hook_null(void** ret_val, REFrameworkTypeDefinitionHandle ret_ty, unsigned long long ret_addr) {}
 }
 
 extern "C" __declspec(dllexport) bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param);
