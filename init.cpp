@@ -194,7 +194,7 @@ namespace REFix {
         try {
             config.writeFile(".\\reframework\\data\\refix_config.txt");
         }
-        catch (libconfig::FileIOException) {
+        catch (const libconfig::FileIOException&) {
             REF::API::get()->log_warn("[REFix] Could not write to the config.");
         }
 
