@@ -1,0 +1,52 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: MSBuild
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    types: ["closed"]
+    branches: [ "master" ]
+
+env:
+  # Path to the solution file relative to the root of the project.
+  SOLUTION_FILE_PATH: ./REFix.sln
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        buildconfig: [RE2_TDB66Debug, RE2_TDB66Release, RE2Debug, RE2Release, RE3_TDB67Debug, RE3_TDB67Release, RE3Debug, RE3Release]
+        
+    if: github.event_name == "push" || github.event.pull_request.merged == true
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Build
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      # Add additional options to the MSBuild command line here (like platform or verbosity level).
+      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+      run: msbuild /m /p:Configuration=${{matrix.buildconfig}} ${{env.SOLUTION_FILE_PATH}}
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.3.1
+      with:
+        # Artifact name
+        name: ${{matrix.buildconfig}}-latest
+        # A file, directory or wildcard pattern that describes what to upload
+        path: ${{env.GITHUB_WORKSPACE}}/x64/${{matrix.buildconfig}}/REFix.dll
+        if-no-files-found: error
+        retention-days: 90
+        overwrite: true
