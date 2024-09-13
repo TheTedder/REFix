@@ -1,4 +1,6 @@
 #include <filesystem>
+#include <thread>
+#include <chrono>
 #include <libconfig.h++>
 
 #include "REFix.h"
@@ -22,7 +24,7 @@ namespace REFix {
     const REF::API::TypeDefinition* damping_struct_single;
     libconfig::Config config;
 
-    bool check_or_set(const char* name) {
+    static bool check_or_set(const char* name) {
         bool value = true;
 
         if (!config.lookupValue(name, value)) {
@@ -32,25 +34,25 @@ namespace REFix {
         return value;
     }
 
-    void disable_input_pitch_scaling(const reframework::API::ManagedObject* twirler_camera_settings)
+    static void disable_input_pitch_scaling(const reframework::API::ManagedObject* twirler_camera_settings)
     {
         // Get the speed curves.
 
         const REF::API::ManagedObject* const normal_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("NormalSpeedCurve");
-        REF::API::get()->log_info("[REFix] Normal speed curve found at %p", normal_speed_curve);
+        PRINT_PTR(normal_speed_curve);
         const REF::API::ManagedObject* const hold_speed_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("HoldSpeedCurve");
-        REF::API::get()->log_info("[REFix] Hold speed curve found at %p", hold_speed_curve);
+        PRINT_PTR(hold_speed_curve);
 
         // The camera's yaw speed is scaled based on your pitch by default. This sets the scale to 1.0 for all angles.
         
         const AnimationCurveFlattener flattener(1.0f);
         flattener.mutate(normal_speed_curve);
-        REF::API::get()->log_info("[REFix] Normal speed curve flattened.");
+        LOG_INFO("Normal speed curve flattened.");
         flattener.mutate(hold_speed_curve);
-        REF::API::get()->log_info("[REFix] Hold speed curve flattened.");
+        LOG_INFO("Hold speed curve flattened.");
     }
 
-    void remove_input_damping(
+    static void remove_input_damping(
         const reframework::API::ManagedObject* twirler_camera_settings,
         const reframework::API::ManagedObject* camera_controller
     )
@@ -58,10 +60,10 @@ namespace REFix {
         // Straighten the input curve.
 
         const REF::API::ManagedObject* const input_curve = *twirler_camera_settings->get_field<REF::API::ManagedObject*>("InputCurve");
-        REF::API::get()->log_info("[REFix] Input curve found at %p", input_curve);
+        PRINT_PTR(input_curve);
         const AnimationCurveStraightener straightener;
         straightener.mutate(input_curve);
-        REF::API::get()->log_info("[REFix] Input curve straightened.");
+        LOG_INFO("Input curve straightened.");
 
         // Remove input damping.
 
@@ -69,21 +71,21 @@ namespace REFix {
             "<TwirlSpeedYaw>k__BackingField"
         );
 
-        REF::API::get()->log_info("[REFix] Twirl speed yaw found at %p", twirl_speed_yaw);
+        PRINT_PTR(twirl_speed_yaw);
 
         REF::API::ManagedObject* const twirl_speed_pitch = *camera_controller->get_field<REF::API::ManagedObject*>(
             "<TwirlSpeedPitch>k__BackingField"
         );
 
-        REF::API::get()->log_info("[REFix] Twirl speed pitch found at %p", twirl_speed_pitch);
+        PRINT_PTR(twirl_speed_pitch);
         const Undamper undamper(damping_struct_single);
         undamper.undamp(twirl_speed_yaw);
-        REF::API::get()->log_info("[REFix] Twirl speed yaw undamped.");
+        LOG_INFO("Twirl speed yaw undamped.");
         undamper.undamp(twirl_speed_pitch);
-        REF::API::get()->log_info("[REFix] Twirl speed pitch undamped.");
+        LOG_INFO("Twirl speed pitch undamped.");
     }
 
-    bool init() {
+    static bool init() {
         if (!fs::create_directory(
             fs::path(".\\reframework\\data", fs::path::native_format)
         )) {
@@ -93,60 +95,72 @@ namespace REFix {
                 config.readFile(".\\reframework\\data\\refix_config.txt");
             }
             catch (const libconfig::FileIOException&) {
-                REF::API::get()->log_warn("[REFix] Failed to open the config.");
+                LOG_WARN("Failed to open the config.");
             }
             catch (const libconfig::ParseException& p) {
-                REF::API::get()->log_warn("[REFix] Config parse error: %s", p.getError());
+                LOG_WARN("Config parse error: %s", p.getError());
             }
         }
-
-        const REF::API::TDB* const tdb = REF::API::get()->tdb();
-        const REF::API::VMContext* const context = REF::API::get()->get_vm_context();
-
+        
         // Get pointers to important types, fields, and methods.
 
-        const REF::API::TypeDefinition* const animation_curve_type = tdb->find_type("via.AnimationCurve");
+        const REF::API::TypeDefinition* const animation_curve_type = TDB()->find_type("via.AnimationCurve");
         get_keys_count = animation_curve_type->find_method("getKeysCount");
+        PRINT_PTR(get_keys_count);
         get_keys = animation_curve_type->find_method("getKeys");
+        PRINT_PTR(get_keys);
         set_keys = animation_curve_type->find_method("setKeys");
-        key_frame_type = tdb->find_type("via.KeyFrame");
-        const REF::API::Method* const get_camera_controller = tdb->find_method(PREFIX ".camera.CameraSystem", "getCameraController");
+        PRINT_PTR(set_keys);
+        key_frame_type = TDB()->find_type("via.KeyFrame");
+        PRINT_PTR(key_frame_type);
+        const REF::API::Method* const get_camera_controller = TDB()->find_method(PREFIX ".camera.CameraSystem", "getCameraController");
 
         // Get the player camera controller.
 
         const REF::API::ManagedObject* const camera_system = REF::API::get()->get_managed_singleton(PREFIX ".camera.CameraSystem");
-        const REF::API::ManagedObject* const player_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(context, camera_system, 0);
+
+        if (camera_system == nullptr)
+        {
+            LOG_ERROR("Could not get Camera System singleton.");
+            return false;
+        }
+
+        PRINT_PTR(camera_system);
+        const REF::API::ManagedObject* const player_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(VMC(), camera_system, 0);
 
         if (player_camera_controller == nullptr) {
-            REF::API::get()->log_error("[REFix] Call to getCameraController(0) failed.");
+            LOG_ERROR("Call to getCameraController(0) failed.");
             return false;
         }
 
-        REF::API::get()->log_info("[REFix] Player Camera Controller found at %p", player_camera_controller);
+        PRINT_PTR(player_camera_controller);
 
 #ifdef RE3
-        const REF::API::ManagedObject* const player_sight_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(context, camera_system, 1);
+        // Get the player sight camera controller.
+
+        const REF::API::ManagedObject* const player_sight_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(VMC(), camera_system, 1);
 
         if (player_sight_camera_controller == nullptr) {
-            REF::API::get()->log_error("[REFix] Call to getCameraController(1) failed.");
+            LOG_ERROR("Call to getCameraController(1) failed.");
             return false;
         }
 
-        REF::API::get()->log_info("[REFix] Player Sight Camera Controller found at %p", player_sight_camera_controller);
+        PRINT_PTR(player_sight_camera_controller);
 #endif
 
         // Get the camera settings.
 
         const REF::API::ManagedObject* const twirler_camera_settings = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlerCameraSettings");
-        REF::API::get()->log_info("[REFix] Twirler Camera Settings found at %p", twirler_camera_settings);
+        PRINT_PTR(twirler_camera_settings);
 
 #ifdef RE3
-        const REF::API::ManagedObject* const sight_twirler_camera_settings = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlerCameraSettings");
-        REF::API::get()->log_info("[REFix] Sight Twirler Camera Settings found at %p", sight_twirler_camera_settings);
+        const REF::API::ManagedObject* const sight_twirler_camera_settings = *player_sight_camera_controller->get_field<REF::API::ManagedObject*>("TwirlerCameraSettings");
+        PRINT_PTR(sight_twirler_camera_settings);
 #endif
 
         if (check_or_set("disable-input-pitch-scaling")) {
             value_field = key_frame_type->find_field("value");
+            PRINT_PTR(value_field);
             disable_input_pitch_scaling(twirler_camera_settings);
 
 #ifdef RE3
@@ -156,8 +170,11 @@ namespace REFix {
 
         if (check_or_set("remove-input-damping")) {
             in_normal_field = key_frame_type->find_field("inNormal");
+            PRINT_PTR(in_normal_field);
             out_normal_field = key_frame_type->find_field("outNormal");
-            damping_struct_single = REF::API::get()->tdb()->find_type(PREFIX ".DampingStruct`1<System.Single>");
+            PRINT_PTR(out_normal_field);
+            damping_struct_single = TDB()->find_type(PREFIX ".DampingStruct`1<System.Single>");
+            PRINT_PTR(damping_struct_single);
             remove_input_damping(twirler_camera_settings, player_camera_controller);
 
 #ifdef RE3
@@ -168,9 +185,11 @@ namespace REFix {
         if (check_or_set("scale-input-with-fov")) {
             // Scale the input by the current FOV.
 
-            camera_param_field = tdb->find_field(PREFIX ".camera.CameraControllerRoot", "<CameraParam>k__BackingField");
-            field_of_view_field = tdb->find_field(PREFIX ".CameraParam", "FieldOfView");
-            const REF::API::TypeDefinition* const twirler_camera_controller_root_type = tdb->find_type(PREFIX ".camera.TwirlerCameraControllerRoot");
+            camera_param_field = TDB()->find_field(PREFIX ".camera.CameraControllerRoot", "<CameraParam>k__BackingField");
+            PRINT_PTR(camera_param_field);
+            field_of_view_field = TDB()->find_field(PREFIX ".CameraParam", "FieldOfView");
+            PRINT_PTR(field_of_view_field);
+            const REF::API::TypeDefinition* const twirler_camera_controller_root_type = TDB()->find_type(PREFIX ".camera.TwirlerCameraControllerRoot");
             twirler_camera_controller_root_type->find_method("updatePitch")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
             twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
         }
@@ -179,14 +198,14 @@ namespace REFix {
         {
             // Remove dynamic difficulty modulation.
 
-            tdb->find_method(PREFIX ".GameRankSystem", "addRankPointDirect")->add_hook(pre_add_rank_point_direct, post_hook_null, false);
+            TDB()->find_method(PREFIX ".GameRankSystem", "addRankPointDirect")->add_hook(pre_add_rank_point_direct, post_hook_null, false);
         }
 
         if (check_or_set("fix-zombie-anims"))
         {
             // Make zombies animate at 60fps.
 
-            tdb->find_method(PREFIX ".MotionIntervalController", "setIntervalLevel")->add_hook(REFix::pre_set_interval_level, REFix::post_hook_null, false);
+            TDB()->find_method(PREFIX ".MotionIntervalController", "setIntervalLevel")->add_hook(REFix::pre_set_interval_level, REFix::post_hook_null, false);
         }
 
         // Write the config in case any settings were changed.
@@ -195,14 +214,23 @@ namespace REFix {
             config.writeFile(".\\reframework\\data\\refix_config.txt");
         }
         catch (const libconfig::FileIOException&) {
-            REF::API::get()->log_warn("[REFix] Could not write to the config.");
+            LOG_WARN("Could not write to the config.");
         }
-
+        
         return true;
     }
 }
 
 bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
     REF::API::initialize(param);
-    return REFix::init();
+    LOG_INFO("Running setup...");
+
+    while (!REFix::init())
+    {
+        LOG_INFO("Setup failed. Retrying...");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    LOG_INFO("Setup completed.");
+    return true;
 }

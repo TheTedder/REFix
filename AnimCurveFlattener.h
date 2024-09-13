@@ -17,6 +17,6 @@ namespace REFix {
         AnimationCurveFlattener(float v);
 
     protected:
-        void operate(REF::API::ManagedObject* key_frame) const;
+        void operate(void* key_frame) const;
     };
 }

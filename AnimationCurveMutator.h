@@ -11,6 +11,6 @@ namespace REFix {
         void mutate(const REF::API::ManagedObject* animation_curve) const;
 
     protected:
-        virtual void operate(REF::API::ManagedObject* key_frame) const = 0;
+        virtual void operate(void* key_frame) const = 0;
     };
 }
