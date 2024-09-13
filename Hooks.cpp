@@ -2,7 +2,7 @@
 #include "Enums.h"
 
 namespace REFix {
-    const float DEFAULT_FOV = 90.0f;
+    static const float DEFAULT_FOV = 90.0f;
     extern const REF::API::Field* camera_param_field;
     extern const REF::API::Field* field_of_view_field;
 
