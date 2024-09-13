@@ -22,7 +22,7 @@ namespace REFix {
     const REF::API::TypeDefinition* damping_struct_single;
     libconfig::Config config;
 
-    bool check_or_set(const char* name) {
+    static bool check_or_set(const char* name) {
         bool value = true;
 
         if (!config.lookupValue(name, value)) {
@@ -32,7 +32,7 @@ namespace REFix {
         return value;
     }
 
-    void disable_input_pitch_scaling(const reframework::API::ManagedObject* twirler_camera_settings)
+    static void disable_input_pitch_scaling(const reframework::API::ManagedObject* twirler_camera_settings)
     {
         // Get the speed curves.
 
@@ -50,7 +50,7 @@ namespace REFix {
         REF::API::get()->log_info("[REFix] Hold speed curve flattened.");
     }
 
-    void remove_input_damping(
+    static void remove_input_damping(
         const reframework::API::ManagedObject* twirler_camera_settings,
         const reframework::API::ManagedObject* camera_controller
     )
@@ -83,7 +83,7 @@ namespace REFix {
         REF::API::get()->log_info("[REFix] Twirl speed pitch undamped.");
     }
 
-    bool init() {
+    static bool init() {
         if (!fs::create_directory(
             fs::path(".\\reframework\\data", fs::path::native_format)
         )) {
