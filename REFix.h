@@ -27,9 +27,9 @@ namespace REF = reframework;
 
 #define VMC() REF::API::get()->get_vm_context()
 
-#define LOG_INFO(s, ...) REF::API::get()->log_info(s __VA_OPT__(,) __VA_ARGS__)
-#define LOG_WARN(s, ...) REF::API::get()->log_warn(s __VA_OPT__(,) __VA_ARGS__)
-#define LOG_ERROR(s, ...) REF::API::get()->log_error(s __VA_OPT__(,) __VA_ARGS__)
+#define LOG_INFO(s, ...) REF::API::get()->log_info("[REFix] " s __VA_OPT__(,) __VA_ARGS__)
+#define LOG_WARN(s, ...) REF::API::get()->log_warn("[REFix] " s __VA_OPT__(,) __VA_ARGS__)
+#define LOG_ERROR(s, ...) REF::API::get()->log_error("[REFix] " s __VA_OPT__(,) __VA_ARGS__)
 
 // Print a pointer location to the log.
 #define PRINT_PTR(ptr) LOG_INFO(#ptr " found at %p", (ptr))
