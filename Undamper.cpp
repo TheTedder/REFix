@@ -5,6 +5,7 @@ namespace REFix {
 
     void Undamper::undamp(REF::API::ManagedObject* damping_struct) const {
         float& damptime = this->damping_time->get_data<float>(damping_struct);
+        LOG_INFO("Damping time: %f", damptime);
         damptime = 0.0f;
     }
 }
