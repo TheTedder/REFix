@@ -1,4 +1,6 @@
 #include <filesystem>
+#include <thread>
+#include <chrono>
 #include <libconfig.h++>
 
 #include "REFix.h"
@@ -204,5 +206,14 @@ namespace REFix {
 
 bool reframework_plugin_initialize(const REFrameworkPluginInitializeParam* param) {
     REF::API::initialize(param);
-    return REFix::init();
+    LOG_INFO("Running setup...");
+
+    while (!REFix::init())
+    {
+        LOG_INFO("Setup failed. Retrying...");
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    LOG_INFO("Setup completed.");
+    return true;
 }
