@@ -140,7 +140,7 @@ namespace REFix {
         PRINT_PTR(twirler_camera_settings);
 
 #ifdef RE3
-        const REF::API::ManagedObject* const sight_twirler_camera_settings = *player_camera_controller->get_field<REF::API::ManagedObject*>("TwirlerCameraSettings");
+        const REF::API::ManagedObject* const sight_twirler_camera_settings = *player_sight_camera_controller->get_field<REF::API::ManagedObject*>("TwirlerCameraSettings");
         PRINT_PTR(sight_twirler_camera_settings);
 #endif
 
