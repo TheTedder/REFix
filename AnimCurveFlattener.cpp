@@ -5,7 +5,8 @@ namespace REFix {
 
     AnimationCurveFlattener::AnimationCurveFlattener(float v) : value(v) {}
 
-        *(float*)value_field->get_data_raw(key_frame, true) = value;
     void AnimationCurveFlattener::operate(void* key_frame) const {
+        float& data = value_field->get_data<float>(key_frame, true);
+        data = value;
     }
 }
