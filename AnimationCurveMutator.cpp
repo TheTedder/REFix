@@ -14,15 +14,15 @@ namespace REFix {
         const uint32_t key_count = get_keys_count->call<uint32_t>(context, animation_curve);
 
         for (uint32_t i = 0U; i < key_count; i++) {
-            const REF::API::ManagedObject* const keys_result = get_keys->call<REF::API::ManagedObject*>(key_frame, context, animation_curve, i);
+            const REF::API::ManagedObject* const keys_result = get_keys->call<REF::API::ManagedObject*>(key_frame, VMC(), animation_curve, i);
 
-            if (keys_result == 0) {
-                REF::API::get()->log_warn("[REFix] Failed to retrieve KeyFrame %u for animation curve %p", i, animation_curve);
+            if (keys_result == nullptr) {
+               LOG_WARN("Failed to retrieve KeyFrame %u for animation curve %p", i, animation_curve);
                 continue;
             }
 
             operate(key_frame);
-            set_keys->call(context, animation_curve, i, key_frame);
+            set_keys->call(VMC(), animation_curve, i, key_frame);
         }
     }
 }
