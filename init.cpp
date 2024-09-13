@@ -136,6 +136,8 @@ namespace REFix {
         PRINT_PTR(player_camera_controller);
 
 #ifdef RE3
+        // Get the player sight camera controller.
+
         const REF::API::ManagedObject* const player_sight_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(VMC(), camera_system, 1);
 
         if (player_sight_camera_controller == nullptr) {
@@ -214,7 +216,7 @@ namespace REFix {
         catch (const libconfig::FileIOException&) {
             LOG_WARN("Could not write to the config.");
         }
-
+        
         return true;
     }
 }
