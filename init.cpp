@@ -114,6 +114,13 @@ namespace REFix {
         // Get the player camera controller.
 
         const REF::API::ManagedObject* const camera_system = REF::API::get()->get_managed_singleton(PREFIX ".camera.CameraSystem");
+
+        if (camera_system == nullptr)
+        {
+            LOG_ERROR("Could not get Camera System singleton.");
+            return false;
+        }
+
         const REF::API::ManagedObject* const player_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(VMC(), camera_system, 0);
 
         if (player_camera_controller == nullptr) {
