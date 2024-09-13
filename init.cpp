@@ -106,9 +106,13 @@ namespace REFix {
 
         const REF::API::TypeDefinition* const animation_curve_type = TDB()->find_type("via.AnimationCurve");
         get_keys_count = animation_curve_type->find_method("getKeysCount");
+        PRINT_PTR(get_keys_count);
         get_keys = animation_curve_type->find_method("getKeys");
+        PRINT_PTR(get_keys);
         set_keys = animation_curve_type->find_method("setKeys");
+        PRINT_PTR(set_keys);
         key_frame_type = TDB()->find_type("via.KeyFrame");
+        PRINT_PTR(key_frame_type);
         const REF::API::Method* const get_camera_controller = TDB()->find_method(PREFIX ".camera.CameraSystem", "getCameraController");
 
         // Get the player camera controller.
@@ -121,6 +125,7 @@ namespace REFix {
             return false;
         }
 
+        PRINT_PTR(camera_system);
         const REF::API::ManagedObject* const player_camera_controller = get_camera_controller->call<REF::API::ManagedObject*>(VMC(), camera_system, 0);
 
         if (player_camera_controller == nullptr) {
@@ -153,6 +158,7 @@ namespace REFix {
 
         if (check_or_set("disable-input-pitch-scaling")) {
             value_field = key_frame_type->find_field("value");
+            PRINT_PTR(value_field);
             disable_input_pitch_scaling(twirler_camera_settings);
 
 #ifdef RE3
@@ -162,8 +168,11 @@ namespace REFix {
 
         if (check_or_set("remove-input-damping")) {
             in_normal_field = key_frame_type->find_field("inNormal");
+            PRINT_PTR(in_normal_field);
             out_normal_field = key_frame_type->find_field("outNormal");
+            PRINT_PTR(out_normal_field);
             damping_struct_single = TDB()->find_type(PREFIX ".DampingStruct`1<System.Single>");
+            PRINT_PTR(damping_struct_single);
             remove_input_damping(twirler_camera_settings, player_camera_controller);
 
 #ifdef RE3
@@ -175,7 +184,9 @@ namespace REFix {
             // Scale the input by the current FOV.
 
             camera_param_field = TDB()->find_field(PREFIX ".camera.CameraControllerRoot", "<CameraParam>k__BackingField");
+            PRINT_PTR(camera_param_field);
             field_of_view_field = TDB()->find_field(PREFIX ".CameraParam", "FieldOfView");
+            PRINT_PTR(field_of_view_field);
             const REF::API::TypeDefinition* const twirler_camera_controller_root_type = TDB()->find_type(PREFIX ".camera.TwirlerCameraControllerRoot");
             twirler_camera_controller_root_type->find_method("updatePitch")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
             twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
