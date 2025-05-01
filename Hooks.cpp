@@ -1,3 +1,4 @@
+#include <cstdint>
 #include "Hooks.h"
 #include "Enums.h"
 
@@ -5,6 +6,8 @@ namespace REFix {
     static const float DEFAULT_FOV = 90.0f;
     extern const REF::API::Field* camera_param_field;
     extern const REF::API::Field* field_of_view_field;
+    extern REF::API::ManagedObject* input_system;
+    extern const REF::API::Field* input_system_input_mode;
 
     int pre_update_pitch_yaw(int argc, void** argv, REFrameworkTypeDefinitionHandle* arg_tys, unsigned long long ret_addr) {
         REF::API::ManagedObject* const camera_param = camera_param_field->get_data<REF::API::ManagedObject*>(argv[1]);
@@ -38,9 +41,10 @@ namespace REFix {
 
     void post_get_control_magnitude(void** ret_val, REFrameworkTypeDefinitionHandle ret_ty, unsigned long long ret_addr)
     {
+        const InputMode mode = input_system_input_mode->get_data<InputMode>(input_system);
         float* magnitude = (float*)ret_val;
 
-        if (*magnitude > 0.0f)
+        if (mode == InputMode::MouseKeyboard && *magnitude > 0.0f)
         {
             *magnitude = 1.0f;
         }
