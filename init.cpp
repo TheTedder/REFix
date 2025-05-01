@@ -22,6 +22,8 @@ namespace REFix {
     const REF::API::Field* camera_param_field;
     const REF::API::Field* field_of_view_field;
     const REF::API::TypeDefinition* damping_struct_single;
+    REF::API::ManagedObject* input_system;
+    const REF::API::Field* input_system_input_mode;
     libconfig::Config config;
 
     static bool check_or_set(const char* name) {
@@ -198,8 +200,19 @@ namespace REFix {
 
         if (check_or_set("remove-input-scaling"))
         {
-            // Don't scale input by control magnitude.
+            // Don't scale input by control magnitude on mouse and keyboard.
 
+            input_system = REF::API::get()->get_managed_singleton(PREFIX ".InputSystem");
+            
+            if (input_system == nullptr)
+            {
+                LOG_ERROR("Could not get input system singleton.");
+                return false;
+            }
+
+            PRINT_PTR(input_system);
+            input_system_input_mode = TDB()->find_field(PREFIX ".InputSystem", "<InputMode>k__BackingField");
+            PRINT_PTR(input_system_input_mode);
             twirler_camera_controller_root_type->find_method("getControlMagnitude")->add_hook(pre_hook_null, post_get_control_magnitude, false);
         }
 
