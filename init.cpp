@@ -182,6 +182,8 @@ namespace REFix {
 #endif
         }
 
+        const REF::API::TypeDefinition* const twirler_camera_controller_root_type = TDB()->find_type(PREFIX ".camera.TwirlerCameraControllerRoot");
+
         if (check_or_set("scale-input-with-fov")) {
             // Scale the input by the current FOV.
 
@@ -189,9 +191,16 @@ namespace REFix {
             PRINT_PTR(camera_param_field);
             field_of_view_field = TDB()->find_field(PREFIX ".CameraParam", "FieldOfView");
             PRINT_PTR(field_of_view_field);
-            const REF::API::TypeDefinition* const twirler_camera_controller_root_type = TDB()->find_type(PREFIX ".camera.TwirlerCameraControllerRoot");
+            
             twirler_camera_controller_root_type->find_method("updatePitch")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
             twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
+        }
+
+        if (check_or_set("remove-input-scaling"))
+        {
+            // Don't scale input by control magnitude.
+
+            twirler_camera_controller_root_type->find_method("getControlMagnitude")->add_hook(pre_hook_null, post_get_control_magnitude, false);
         }
 
         if (check_or_set("remove-dynamic-difficulty"))
