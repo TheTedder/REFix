@@ -14,4 +14,10 @@ namespace REFix {
         PlUseDefenceItem = 8,
         FromDebug = 9
     };
+
+    enum class InputMode : int32_t
+    {
+        Pad = 0,
+        MouseKeyboard = 1
+    };
 }
