@@ -35,4 +35,14 @@ namespace REFix {
         *level = 0;
         return REFRAMEWORK_HOOK_CALL_ORIGINAL;
     }
+
+    void post_get_control_magnitude(void** ret_val, REFrameworkTypeDefinitionHandle ret_ty, unsigned long long ret_addr)
+    {
+        float* magnitude = (float*)ret_val;
+
+        if (*magnitude > 0.0f)
+        {
+            *magnitude = 1.0f;
+        }
+    }
 }
