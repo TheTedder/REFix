@@ -193,7 +193,6 @@ namespace REFix {
             PRINT_PTR(camera_param_field);
             field_of_view_field = TDB()->find_field(PREFIX ".CameraParam", "FieldOfView");
             PRINT_PTR(field_of_view_field);
-            
             twirler_camera_controller_root_type->find_method("updatePitch")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
             twirler_camera_controller_root_type->find_method("updateYaw")->add_hook(pre_update_pitch_yaw, post_hook_null, false);
         }
