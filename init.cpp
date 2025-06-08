@@ -88,22 +88,29 @@ namespace REFix {
     }
 
     static bool init() {
-        if (!fs::create_directory(
-            fs::path(".\\reframework\\data", fs::path::native_format)
-        )) {
-            // The data directory exists. Read the config.
 
-            try {
-                config.readFile(".\\reframework\\data\\refix_config.txt");
-            }
-            catch (const libconfig::FileIOException&) {
-                LOG_WARN("Failed to open the config.");
-            }
-            catch (const libconfig::ParseException& p) {
-                LOG_WARN("Config parse error: %s", p.getError());
+        const fs::path data_dir = fs::current_path() / "reframework" / "data";
+        const fs::path config_file = data_dir / "refix_config.txt";
+        std::error_code err_create_data_dir;
+
+        if (!fs::create_directory(data_dir, err_create_data_dir)) {
+            if (err_create_data_dir) {
+                LOG_WARN("Error creating data folder 0x%x: %s", err_create_data_dir.value(), err_create_data_dir.message().c_str());
+            } else {
+                // The data directory exists. Read the config.
+
+                try {
+                    config.readFile(config_file.string());
+                }
+                catch (const libconfig::FileIOException&) {
+                    LOG_WARN("Failed to open the config.");
+                }
+                catch (const libconfig::ParseException& p) {
+                    LOG_WARN("Config parse error: %s", p.getError());
+                }
             }
         }
-        
+
         // Get pointers to important types, fields, and methods.
 
         const REF::API::TypeDefinition* const animation_curve_type = TDB()->find_type("via.AnimationCurve");
@@ -232,7 +239,7 @@ namespace REFix {
         // Write the config in case any settings were changed.
 
         try {
-            config.writeFile(".\\reframework\\data\\refix_config.txt");
+            config.writeFile(config_file.string());
         }
         catch (const libconfig::FileIOException&) {
             LOG_WARN("Could not write to the config.");
