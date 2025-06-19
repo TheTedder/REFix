@@ -35,6 +35,11 @@ namespace REF = reframework;
 #define PRINT_PTR(ptr) LOG_INFO(#ptr " found at %p", (ptr))
 
 namespace REFix {
+    static int pre_hook_null(int argc, void** argv, REFrameworkTypeDefinitionHandle* arg_tys, unsigned long long ret_addr)
+    {
+        return REFRAMEWORK_HOOK_CALL_ORIGINAL;
+    }
+
     static void post_hook_null(void** ret_val, REFrameworkTypeDefinitionHandle ret_ty, unsigned long long ret_addr) {}
 }
 

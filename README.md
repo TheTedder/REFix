@@ -21,8 +21,12 @@ The mouse sensitivity decreases when the FOV is lower and vice versa. This is mo
 Normally, certain actions in the game suck as firing a weapon, damaging an enemy, or taking damage yourself will cause the difficulty scale of the game to be adjusted slightly. This adds up over the course of a playthrough, resulting in unfairly tanky enemies if you play too well; therefore, the best strategy is to periodically take intentional damage to keep the game's difficulty low. This is undesireable because it actually rewards the player for playing worse, and lowers the skill ceiling by not allowing the player to get a feel for how many hits it takes to defeat each enemy. This mod removes this feature, although scripted difficulty changes are still present. For example, the difficult setting starts out low during the intro sequence at the gas station and then increases upon entering RPD.
 
 ### Improves zombie animation framerate
-
 At low LODs, the framerate of the zombie animations is reduced in order to save some processing power. This looks really bad though, and it barely saves any CPU time, so this mod forces all zombies to animate at full speed. This functionality is reverse-engineered from TheEggPie's mod that does the same exact thing. See https://www.nexusmods.com/residentevil22019/mods/728.
+
+### Removes Input Scaling
+Normally, the user's input is scaled by the magnitude of the right control stick. This works fine when playing with a controller but it's not implemented correctly
+for mouse input. The game incorrectly reports the "control stick" as being held at half strength sometimes, causing the player's mouse movements to be half as strong
+as they're supposed to be. This plugin corrects this behavior by forcing the game to report either 0 or 1 for the control stick magnitude at all times when playing with a mouse.
 
 ## Installation
 ### Prerequisites
