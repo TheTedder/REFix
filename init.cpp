@@ -48,7 +48,9 @@ namespace REFix {
         // The camera's yaw speed is scaled based on your pitch by default. This sets the scale to 1.0 for all angles.
         
         const AnimationCurveFlattener flattener(1.0f);
+        const AnimationCurveStraightener straightener;
         flattener.mutate(normal_speed_curve);
+        straightener.mutate(normal_speed_curve);
         LOG_INFO("Normal speed curve flattened.");
         flattener.mutate(hold_speed_curve);
         LOG_INFO("Hold speed curve flattened.");
