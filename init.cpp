@@ -53,6 +53,7 @@ namespace REFix {
         straightener.mutate(normal_speed_curve);
         LOG_INFO("Normal speed curve flattened.");
         flattener.mutate(hold_speed_curve);
+        straightener.mutate(hold_speed_curve);
         LOG_INFO("Hold speed curve flattened.");
     }
 
