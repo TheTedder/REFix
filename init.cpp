@@ -48,9 +48,12 @@ namespace REFix {
         // The camera's yaw speed is scaled based on your pitch by default. This sets the scale to 1.0 for all angles.
         
         const AnimationCurveFlattener flattener(1.0f);
+        const AnimationCurveStraightener straightener;
         flattener.mutate(normal_speed_curve);
+        straightener.mutate(normal_speed_curve);
         LOG_INFO("Normal speed curve flattened.");
         flattener.mutate(hold_speed_curve);
+        straightener.mutate(hold_speed_curve);
         LOG_INFO("Hold speed curve flattened.");
     }
 
@@ -167,6 +170,11 @@ namespace REFix {
         PRINT_PTR(sight_twirler_camera_settings);
 #endif
 
+        in_normal_field = key_frame_type->find_field("inNormal");
+        PRINT_PTR(in_normal_field);
+        out_normal_field = key_frame_type->find_field("outNormal");
+        PRINT_PTR(out_normal_field);
+
         if (check_or_set("disable-input-pitch-scaling")) {
             value_field = key_frame_type->find_field("value");
             PRINT_PTR(value_field);
@@ -178,10 +186,6 @@ namespace REFix {
         }
 
         if (check_or_set("remove-input-damping")) {
-            in_normal_field = key_frame_type->find_field("inNormal");
-            PRINT_PTR(in_normal_field);
-            out_normal_field = key_frame_type->find_field("outNormal");
-            PRINT_PTR(out_normal_field);
             damping_struct_single = TDB()->find_type(PREFIX ".DampingStruct`1<System.Single>");
             PRINT_PTR(damping_struct_single);
             remove_input_damping(twirler_camera_settings, player_camera_controller);
