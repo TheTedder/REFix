@@ -1,4 +1,9 @@
 # REFix
+[![Github all releases](https://img.shields.io/github/downloads/TheTedder/REFix/total.svg)](https://GitHub.com/TheTedder/REFix/releases/)
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/TheTedder/REFix?tab=MIT-1-ov-file#readme)
+[![Generic badge](https://img.shields.io/badge/Nexus_Mods-RE2-orange.svg)](https://www.nexusmods.com/residentevil22019/mods/1356)
+[![Generic badge](https://img.shields.io/badge/Nexus_Mods-RE3-orange.svg)](https://www.nexusmods.com/residentevil32020/mods/957)
+
 An REFramework plugin for RE2R+RE3R that provides fixes and gameplay improvements. The input-altering aspects of this plugin are intended to be used by those playing with a mouse and keyboard. Controller players may not find them suitable.
 
 ## Compatible Games/Versions
