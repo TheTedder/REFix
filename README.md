@@ -7,7 +7,7 @@
 An REFramework plugin for RE2R+RE3R that provides fixes and gameplay improvements. The input-altering aspects of this plugin are intended to be used by those playing with a mouse and keyboard. Controller players may not find them suitable.
 
 ## Compatible Games/Versions
-This mod works on both the current patches and the DX11 non-raytraced versions of the Resident Evil 2 Remake and the Resident Evil 3 Remake. Download the "TDBxx" versions for use with the DX11 branches. It may work on other games in the same engine but this has not been tested. Better compatibility is planned in future releases. **Unofficial or "cracked" versions of the game are not supported.** Platforms that require the use of compatibility layers such as wine or proton in order to run the game are not supported.
+This mod works on both the current patches and the DX11 non-raytraced versions of the Resident Evil 2 Remake and the Resident Evil 3 Remake. Download the "TDBxx" versions for use with the DX11 branches. It may work on other games in the same engine but this has not been tested. Better compatibility is planned in future releases. **Unofficial or "cracked" versions of the game are not supported.** Proton (including forks) on Linux is supported. 
 
 ## Features
 
