@@ -44,5 +44,8 @@ directory located in the game directory.
 ## Configuration
 When the plugin loads for the first time, it will generate a config file at `reframework\data\refix_config.txt` inside the game directory that lets the user selectively enable or disable any of the features mentioned above. Changes will not take effect until the game is restarted.
 
+## Discord
+Want to contribute to development, get more detailed support, or give feedback? Check out the #refix channel in [my discord](https://discord.me/tedder).
+
 [^1]: It's actually a little more complicated than this. All mouse movement is scaled by a factor that changes dynamically based on how much the mouse is
 already moving. This plugin removes this behavior entirely by making it so that the mouse speed scaling factor is effectively constant.
